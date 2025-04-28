@@ -15,7 +15,5 @@ contract TestProject {
 
         IProjectFund(projectFundAddress).donateToProject{value: msg.value}(_projectName, _message);
     }
-    function getProjectTotal(string memory _projectName) public view returns (uint) {
-        return IProjectFund.getProjectTotal(_projectName);
-    }
+    
 }
