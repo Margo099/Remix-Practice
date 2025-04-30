@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract LibraryStorage {
-    
     mapping(address => uint) public bookOwner;
     struct Book{
         string bookName;
@@ -23,7 +22,7 @@ contract LibraryStorage {
     function borrowBook(uint bookId) external {
         require(bookId < books.length, "Wrong ID");
         require(books[bookId].owner == address(0), "Book already taken!");
-        require(bookOwner[msg.sender] != 1, "U already taken a book!");
+        require(bookOwner[msg.sender] != 1, "U've already taken a book!");
         books[bookId].owner=msg.sender;
         bookOwner[msg.sender]= bookId + 1;
         emit newBookTaken(books[bookId].bookName, msg.sender);
@@ -51,5 +50,24 @@ contract LibraryStorage {
         }
 
         return availableBooks;
+    }
+    function allReservedBooks() external view returns(Book[] memory) {
+    uint count = 0;
+    for (uint i =0; i < books.length; i++) {
+        if(books[i].owner != address(0)){
+            count++;
+        }
+    }
+    
+    Book[] memory reservedBooks = new Book[] (count);
+    uint index = 0;
+    for(uint i = 0; i < books.length; i++){
+        reservedBooks[index] = books[i];
+        index++;
+    }
+    return reservedBooks;
+    }
+    function reservBook() external {
+        if()
     }
 }

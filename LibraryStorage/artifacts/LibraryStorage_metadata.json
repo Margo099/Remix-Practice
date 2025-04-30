@@ -51,6 +51,31 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "allReservedBooks",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "bookName",
+								"type": "string"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							}
+						],
+						"internalType": "struct LibraryStorage.Book[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -132,6 +157,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "reservBook",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -158,7 +190,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"LibraryStorage.sol": "LibraryStorage"
+			"LibraryStorage/LibraryStorage.sol": "LibraryStorage"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -172,12 +204,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"LibraryStorage.sol": {
-			"keccak256": "0x73e22283b23233e0c39eaa70f27f5b52028deb0cc4b9b9ab2f25644d7602f014",
+		"LibraryStorage/LibraryStorage.sol": {
+			"keccak256": "0x6fcfb1b0ffe425c1384302a6a26ad6f84e715ee1222c62134384c076ec846ef9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://73e71f6d8a73325a5f85640e4a7ea495867e21c4f4953813ce9cb0cec850e439",
-				"dweb:/ipfs/Qmf1p8NrdyfGfRce2mAutq6rMGRxot3zR9euPqBxEpPphN"
+				"bzz-raw://2e4255741cdbe6441ccd085200cde606d8ff3170b10c1597c5d3b6109b16c1d3",
+				"dweb:/ipfs/QmV4GVzafzU4J78nzXqUtRBVqTuFqTTTEuV2Ra3n2kkmcs"
 			]
 		}
 	},

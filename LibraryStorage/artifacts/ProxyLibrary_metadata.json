@@ -1,0 +1,91 @@
+{
+	"compiler": {
+		"version": "0.8.0+commit.c7dfd78e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_libraryStorage",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					}
+				],
+				"name": "borrowBook",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					}
+				],
+				"name": "returnBook",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"LibraryStorage/ProxyLibrary.sol": "ProxyLibrary"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"LibraryStorage/ILibraryStorage.sol": {
+			"keccak256": "0xfb4aa19619a0ce86bc0f05d01f03d58f9cf8fe2831dfe95f21ebc71bc3854032",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a40e8dd559fdac2797ad7d8f81ec917e5c9328320c28203aa72085c409bf3f14",
+				"dweb:/ipfs/QmZagXWJeuwpy2KwLTRSX6FpMMzuqaWZhxPNnpc4ajZEZk"
+			]
+		},
+		"LibraryStorage/ProxyLibrary.sol": {
+			"keccak256": "0xd3b6873ca44bad3ebf8052b3dadace54a70b91f270f141d7a8765aa24452c9cd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://732a7e7549f9d1d239fbcdb77f4228c2bc87e300e022cbab70d20f0dffc68699",
+				"dweb:/ipfs/QmWkBKcDjd2ZZ9Hdv9bsJbRTQA2oRyT6Sey5YBhVLKPZV9"
+			]
+		}
+	},
+	"version": 1
+}
