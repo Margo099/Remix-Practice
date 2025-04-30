@@ -157,13 +157,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "reservBook",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -205,11 +198,11 @@
 	},
 	"sources": {
 		"LibraryStorage/LibraryStorage.sol": {
-			"keccak256": "0x6fcfb1b0ffe425c1384302a6a26ad6f84e715ee1222c62134384c076ec846ef9",
+			"keccak256": "0xe03d5006abcd6e423e9873f428cb8fb15254846ff6e5adf11be60a27f8497256",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2e4255741cdbe6441ccd085200cde606d8ff3170b10c1597c5d3b6109b16c1d3",
-				"dweb:/ipfs/QmV4GVzafzU4J78nzXqUtRBVqTuFqTTTEuV2Ra3n2kkmcs"
+				"bzz-raw://80db3ae46f3448d8138a337bf40aaf84513902d5b7418b81ed78d3d54c7d1fbd",
+				"dweb:/ipfs/QmPt7JHcH7dpsUnoV1jLjGCTRZjmUyv5AtL91GbSEuaVLf"
 			]
 		}
 	},

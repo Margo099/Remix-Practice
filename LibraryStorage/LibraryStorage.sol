@@ -67,7 +67,4 @@ contract LibraryStorage {
     }
     return reservedBooks;
     }
-    function reservBook() external {
-        if()
-    }
 }
