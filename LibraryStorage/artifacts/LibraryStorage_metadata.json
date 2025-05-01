@@ -132,6 +132,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					}
+				],
+				"name": "cancelReservation",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "getAvailableBook",
 				"outputs": [
@@ -154,6 +167,38 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					}
+				],
+				"name": "getMyReservations",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					}
+				],
+				"name": "reserv",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -198,11 +243,11 @@
 	},
 	"sources": {
 		"LibraryStorage/LibraryStorage.sol": {
-			"keccak256": "0xe03d5006abcd6e423e9873f428cb8fb15254846ff6e5adf11be60a27f8497256",
+			"keccak256": "0xc61d185b2c3c0277153371f1c420dae4dfaa1470e001b345ae70bf89c379c08a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://80db3ae46f3448d8138a337bf40aaf84513902d5b7418b81ed78d3d54c7d1fbd",
-				"dweb:/ipfs/QmPt7JHcH7dpsUnoV1jLjGCTRZjmUyv5AtL91GbSEuaVLf"
+				"bzz-raw://e869473e39c66a86b0df6d94725336725e5402097dca88f6baa9537a64b6f56d",
+				"dweb:/ipfs/Qmcb94uELBo9QkY5GYto6oTUfo9MhCeQG5VmRMZbgQshT5"
 			]
 		}
 	},
