@@ -205,6 +205,30 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "reservations",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "bookId",
 						"type": "uint256"
 					}
@@ -243,11 +267,11 @@
 	},
 	"sources": {
 		"LibraryStorage/LibraryStorage.sol": {
-			"keccak256": "0xc61d185b2c3c0277153371f1c420dae4dfaa1470e001b345ae70bf89c379c08a",
+			"keccak256": "0x4478166d2d507c0603ea31a0de242e5e028e1d190efae53c366b222a4dcbe713",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e869473e39c66a86b0df6d94725336725e5402097dca88f6baa9537a64b6f56d",
-				"dweb:/ipfs/Qmcb94uELBo9QkY5GYto6oTUfo9MhCeQG5VmRMZbgQshT5"
+				"bzz-raw://98086a8f4a38b8da7e58790457bf8846c1ffc0311844e3bef8c9684822e2a5e3",
+				"dweb:/ipfs/QmQZFVpyoqr3P2DY86x84SvGZhxzVMWeQDnxFXYaztxgAR"
 			]
 		}
 	},

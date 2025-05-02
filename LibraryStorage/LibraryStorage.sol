@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 contract LibraryStorage {
-    mapping(uint => address[]) reservations;
+    mapping(uint => address[]) public reservations;
     mapping(address => uint) public bookOwner;
     struct Book{
         string bookName;
@@ -31,7 +31,20 @@ contract LibraryStorage {
     require(msg.sender ==books[bookId].owner,"Only owner can return!");
     books[bookId].owner = address(0);
     bookOwner[msg.sender]=0;
-}
+
+    address[] storage list = reservations[bookId];
+    address nextUser;
+    if(list.length>0) {
+    nextUser=list[0];
+    books[bookId].owner=nextUser;
+    bookOwner[nextUser]=bookId+1;
+    for(uint i=0; i < list.length-1; i++){
+                list[i]=list[i+1];
+    }
+            list.pop();
+        }
+   }
+
     function getAvailableBook() external view returns (Book[] memory) {
         uint count = 0;
         for (uint i = 0; i < books.length; i++) {
@@ -59,8 +72,10 @@ contract LibraryStorage {
     Book[] memory reservedBooks = new Book[] (count);
     uint index = 0;
     for(uint i = 0; i < books.length; i++){
+        if(books[i].owner != address(0)){
         reservedBooks[index] = books[i];
         index++;
+    }
     }
     return reservedBooks;
     }
