@@ -13,9 +13,28 @@
 						"internalType": "string",
 						"name": "bookName",
 						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
 					}
 				],
 				"name": "newBookAdded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "bookName",
+						"type": "string"
+					}
+				],
+				"name": "newBookReturned",
 				"type": "event"
 			},
 			{
@@ -38,6 +57,19 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "bookName",
+						"type": "string"
+					}
+				],
+				"name": "newReservation",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "string",
@@ -48,31 +80,6 @@
 				"name": "addBook",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "allReservedBooks",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "string",
-								"name": "bookName",
-								"type": "string"
-							},
-							{
-								"internalType": "address",
-								"name": "owner",
-								"type": "address"
-							}
-						],
-						"internalType": "struct LibraryStorage.Book[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -113,6 +120,11 @@
 						"internalType": "address",
 						"name": "owner",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dueDate",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -159,6 +171,11 @@
 								"internalType": "address",
 								"name": "owner",
 								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "dueDate",
+								"type": "uint256"
 							}
 						],
 						"internalType": "struct LibraryStorage.Book[]",
@@ -189,16 +206,33 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "getReservedBooks",
+				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "bookId",
-						"type": "uint256"
+						"components": [
+							{
+								"internalType": "string",
+								"name": "bookName",
+								"type": "string"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "dueDate",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct LibraryStorage.Book[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
-				"name": "reserv",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -223,6 +257,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					}
+				],
+				"name": "reserveBook",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -267,11 +314,11 @@
 	},
 	"sources": {
 		"LibraryStorage/LibraryStorage.sol": {
-			"keccak256": "0x4478166d2d507c0603ea31a0de242e5e028e1d190efae53c366b222a4dcbe713",
+			"keccak256": "0x46e79f34b39515d0a3c2208bf1fff3bd1ec8b255e780c50ce2b1381bb1cdb23d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://98086a8f4a38b8da7e58790457bf8846c1ffc0311844e3bef8c9684822e2a5e3",
-				"dweb:/ipfs/QmQZFVpyoqr3P2DY86x84SvGZhxzVMWeQDnxFXYaztxgAR"
+				"bzz-raw://3c68f97a6bc6747c7c653694c87665f4170806b9b632387c69510426957986a8",
+				"dweb:/ipfs/QmPa9uQ9zRHfCAbMem7XQ1aKqRPjwgMQpQJoFw7tEA4qCw"
 			]
 		}
 	},
