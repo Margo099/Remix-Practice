@@ -1,5 +1,5 @@
 {
-	"id": "b167e8d63ec725d543bbac8824e14852",
+	"id": "3e411f91b91ba0c64a85ffbc341bf004",
 	"_format": "hh-sol-build-info-1",
 	"solcVersion": "0.8.0",
 	"solcLongVersion": "0.8.0+commit.c7dfd78e",
@@ -7,7 +7,7 @@
 		"language": "Solidity",
 		"sources": {
 			"LibraryStorage/ILibraryStorage.sol": {
-				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface ILibraryStorage {\r\n    function borrowBook(uint bookId) external;\r\n    function returnBook(uint bookId) external;\r\n}"
+				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface ILibraryStorage {\r\n    function borrowBook(uint bookId) external;\r\n    function returnBook(uint bookId) external;\r\n    function reserveBook(uint bookId) external;\r\n    function cancelReservation(uint bookId) external;\r\n}"
 			}
 		},
 		"settings": {
@@ -64,6 +64,32 @@
 									"type": "uint256"
 								}
 							],
+							"name": "cancelReservation",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "bookId",
+									"type": "uint256"
+								}
+							],
+							"name": "reserveBook",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "bookId",
+									"type": "uint256"
+								}
+							],
 							"name": "returnBook",
 							"outputs": [],
 							"stateMutability": "nonpayable",
@@ -96,10 +122,12 @@
 						"legacyAssembly": null,
 						"methodIdentifiers": {
 							"borrowBook(uint256)": "7e490a9e",
+							"cancelReservation(uint256)": "ae5e6cf4",
+							"reserveBook(uint256)": "ce966b2b",
 							"returnBook(uint256)": "ca5140c9"
 						}
 					},
-					"metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bookId\",\"type\":\"uint256\"}],\"name\":\"borrowBook\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bookId\",\"type\":\"uint256\"}],\"name\":\"returnBook\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"LibraryStorage/ILibraryStorage.sol\":\"ILibraryStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"LibraryStorage/ILibraryStorage.sol\":{\"keccak256\":\"0xfb4aa19619a0ce86bc0f05d01f03d58f9cf8fe2831dfe95f21ebc71bc3854032\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a40e8dd559fdac2797ad7d8f81ec917e5c9328320c28203aa72085c409bf3f14\",\"dweb:/ipfs/QmZagXWJeuwpy2KwLTRSX6FpMMzuqaWZhxPNnpc4ajZEZk\"]}},\"version\":1}",
+					"metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bookId\",\"type\":\"uint256\"}],\"name\":\"borrowBook\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bookId\",\"type\":\"uint256\"}],\"name\":\"cancelReservation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bookId\",\"type\":\"uint256\"}],\"name\":\"reserveBook\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bookId\",\"type\":\"uint256\"}],\"name\":\"returnBook\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"LibraryStorage/ILibraryStorage.sol\":\"ILibraryStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"LibraryStorage/ILibraryStorage.sol\":{\"keccak256\":\"0xf84703730ffb369ec87863a90be192d0753df38c9f207b1f13f46a015af8ab8a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://686d27d645f82fe42e20798e1c1baf994222dbeeda742f6e76bfd6e2a1825e05\",\"dweb:/ipfs/QmWHHjETuqZtHidcWf6jnYfqY6TBCv1ozSmUzhtfqaAs3S\"]}},\"version\":1}",
 					"storageLayout": {
 						"storage": [],
 						"types": null
@@ -118,10 +146,10 @@
 					"absolutePath": "LibraryStorage/ILibraryStorage.sol",
 					"exportedSymbols": {
 						"ILibraryStorage": [
-							12
+							22
 						]
 					},
-					"id": 13,
+					"id": 23,
 					"license": "MIT",
 					"nodeType": "SourceUnit",
 					"nodes": [
@@ -142,9 +170,9 @@
 							"contractDependencies": [],
 							"contractKind": "interface",
 							"fullyImplemented": false,
-							"id": 12,
+							"id": 22,
 							"linearizedBaseContracts": [
-								12
+								22
 							],
 							"name": "ILibraryStorage",
 							"nodeType": "ContractDefinition",
@@ -196,7 +224,7 @@
 										"parameters": [],
 										"src": "134:0:0"
 									},
-									"scope": 12,
+									"scope": 22,
 									"src": "93:42:0",
 									"stateMutability": "nonpayable",
 									"virtual": false,
@@ -249,18 +277,124 @@
 										"parameters": [],
 										"src": "182:0:0"
 									},
-									"scope": 12,
+									"scope": 22,
 									"src": "141:42:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "ce966b2b",
+									"id": 16,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "reserveBook",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 14,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 13,
+												"mutability": "mutable",
+												"name": "bookId",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "210:11:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "uint",
+													"nodeType": "ElementaryTypeName",
+													"src": "210:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "209:13:0"
+									},
+									"returnParameters": {
+										"id": 15,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "231:0:0"
+									},
+									"scope": 22,
+									"src": "189:43:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "ae5e6cf4",
+									"id": 21,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "cancelReservation",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 19,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 18,
+												"mutability": "mutable",
+												"name": "bookId",
+												"nodeType": "VariableDeclaration",
+												"scope": 21,
+												"src": "265:11:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 17,
+													"name": "uint",
+													"nodeType": "ElementaryTypeName",
+													"src": "265:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "264:13:0"
+									},
+									"returnParameters": {
+										"id": 20,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "286:0:0"
+									},
+									"scope": 22,
+									"src": "238:49:0",
 									"stateMutability": "nonpayable",
 									"virtual": false,
 									"visibility": "external"
 								}
 							],
-							"scope": 13,
-							"src": "60:126:0"
+							"scope": 23,
+							"src": "60:230:0"
 						}
 					],
-					"src": "33:153:0"
+					"src": "33:257:0"
 				},
 				"id": 0
 			}

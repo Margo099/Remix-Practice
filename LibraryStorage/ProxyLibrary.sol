@@ -13,4 +13,10 @@ contract ProxyLibrary {
     function returnBook(uint bookId) external {
         libraryStorage.returnBook(bookId);
     }
+    function reserveBook(uint bookId) external {
+        libraryStorage.reserveBook(bookId);
+    }
+    function cancelReservation(uint bookId) external {
+        libraryStorage.cancelReservation(bookId);
+    }
 }

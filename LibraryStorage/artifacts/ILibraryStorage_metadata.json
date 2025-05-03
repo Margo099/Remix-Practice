@@ -8,17 +8,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_libraryStorage",
-						"type": "address"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "bookId",
 						"type": "uint256"
@@ -82,7 +71,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"LibraryStorage/ProxyLibrary.sol": "ProxyLibrary"
+			"LibraryStorage/ILibraryStorage.sol": "ILibraryStorage"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -102,14 +91,6 @@
 			"urls": [
 				"bzz-raw://686d27d645f82fe42e20798e1c1baf994222dbeeda742f6e76bfd6e2a1825e05",
 				"dweb:/ipfs/QmWHHjETuqZtHidcWf6jnYfqY6TBCv1ozSmUzhtfqaAs3S"
-			]
-		},
-		"LibraryStorage/ProxyLibrary.sol": {
-			"keccak256": "0x37f840dee71d2a907e164cca74a65ad11e0e7921fe18e54226d1fd07ec04bbb7",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://cd0a5cac47cac76beaa5d0bd7bca7289816fea643f08e2c7ebdce86a7f297d4e",
-				"dweb:/ipfs/QmeUjKofY7X58wCziuRgm62PAxAhpJKrjahSXbvnBMGp6j"
 			]
 		}
 	},
