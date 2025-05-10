@@ -1,0 +1,99 @@
+{
+	"compiler": {
+		"version": "0.8.0+commit.c7dfd78e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					}
+				],
+				"name": "Bought",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token",
+				"outputs": [
+					{
+						"internalType": "contract IERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"ERC20/ERC20.sol": "DEX"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ERC20/ERC20.sol": {
+			"keccak256": "0x6c56731dd1d626a844c5feacd9033aa0186a9d2526b2424c0c86188796de746e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2bdb8a2160243d7ab346828d540f6910e858958a5be8bac429c2b51cd8b3f8ab",
+				"dweb:/ipfs/QmRxUTVznsBi5Lw6my5sHS1msNmXY3FLDq4yUxpc7EZJDK"
+			]
+		},
+		"ERC20/IERC20.sol": {
+			"keccak256": "0xfa5c50d4447f8aca7af46f424325b342f7372aef2600a86f15ddeb4908c0902a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bcf0a8cc8d9f8981fd14d5519c9dc6f6fc139e534190a25e4ece789889eece4a",
+				"dweb:/ipfs/QmVvp4uc9JvpVmiCTR9YnNuFg4AvEgaH5YBaYaJKjWBDTp"
+			]
+		}
+	},
+	"version": 1
+}
