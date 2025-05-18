@@ -35,7 +35,7 @@ contract ERC20Base is IERC20 {
     function decimals() external pure override returns(uint) {
         return 18;
     }
-    function totalSupply() external view override returns(uint) {
+    function totalSupply() public view override returns(uint) {
         return totalTokens;
     }
     function balanceOf(address account) public view override returns(uint) {
@@ -66,11 +66,12 @@ contract ERC20Base is IERC20 {
         balances[to] += amount;
         emit Transfer(address(0), to, amount);
     }
-    function burn(address _from, uint amount) public onlyOwner{
-        _beforeTokenTransfer(_from, address(0), amount);
-        balances[_from]-=amount;
-        totalTokens-=amount;
-        emit Transfer(_from, address(0), amount);
+    function _burn(address from, uint amount) internal {
+        _beforeTokenTransfer(from, address(0), amount);
+        require(balances[from] >= amount, "Not enough tokens to burn");
+        balances[from] -= amount;
+        totalTokens -= amount;
+        emit Transfer(from, address(0), amount);
     }
     function allowance(address _owner, address spender) public view override returns(uint){
         return allowances[_owner][spender];

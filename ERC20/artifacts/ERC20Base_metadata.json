@@ -192,24 +192,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_from",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "burn",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -387,11 +369,11 @@
 	},
 	"sources": {
 		"ERC20/ERC20Base.sol": {
-			"keccak256": "0x94210d70d5b7176d8ef8c8912c13ff3085f55d34f42b5407af395a15a49a109f",
+			"keccak256": "0xa040bc8acb85453c94cd0418833c8bacd698af95a345183fdb2a7c39a8598dce",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e8a4777190cbfd3a18e43b646588ff1b9f86232ead60275ae5ec9f7d7141aa82",
-				"dweb:/ipfs/QmTVVrGTMLdNSHFRyVVfBGGYDtgfEoCTiupNQK8Z1KYKJZ"
+				"bzz-raw://7be5a2095bd254de059d3cbc343aea898d74acf2c9543774355f02d70a0018b6",
+				"dweb:/ipfs/QmTbAkgQqtVhaAiteccVd5paiwC35u49eKEyZRY8A1iGoP"
 			]
 		},
 		"ERC20/IERC20.sol": {
