@@ -1,0 +1,711 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\AdvancedDonationLog.sol": {
+      "lastModificationDate": 1747576667644,
+      "contentHash": "6ae7b39ba8abf529f371341f47828d54",
+      "sourceName": "contracts/AdvancedDonationLog.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AdvancedDonationLog"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\AMM.sol": {
+      "lastModificationDate": 1748277512808,
+      "contentHash": "da51846f041fea37d5c7f84754668cdb",
+      "sourceName": "contracts/AMM.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/math/Math.sol",
+        "./ERC20Base.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "AMM"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ERC20Base.sol": {
+      "lastModificationDate": 1747576840439,
+      "contentHash": "dbfc021bfbc70a0d96476c4df74b88cf",
+      "sourceName": "contracts/ERC20Base.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "ERC20Base"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
+      "lastModificationDate": 1748699856482,
+      "contentHash": "5ec781e33d3a9ac91ffdc83d94420412",
+      "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Panic.sol",
+        "./SafeCast.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Math"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\IERC20.sol": {
+      "lastModificationDate": 1747576842595,
+      "contentHash": "6a945f60b5f2a1770284fbabaed047ac",
+      "sourceName": "contracts/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\TokenSwap.sol": {
+      "lastModificationDate": 1748453798954,
+      "contentHash": "7d61138d6ecb26e5c4ca0b6c3dfd4619",
+      "sourceName": "contracts/TokenSwap.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC20Base.sol",
+        "./AToken.sol",
+        "./BToken.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "TokenSwap"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\AToken.sol": {
+      "lastModificationDate": 1747576835582,
+      "contentHash": "ab2f9bfc29bece4ae4f83db299b17136",
+      "sourceName": "contracts/AToken.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC20Base.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "AToken"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\BToken.sol": {
+      "lastModificationDate": 1748701436907,
+      "contentHash": "c09e32f57a13133e33c7695940398940",
+      "sourceName": "contracts/BToken.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC20Base.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "BToken"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\DonationEventLog.sol": {
+      "lastModificationDate": 1747576670957,
+      "contentHash": "fc167c1eef3c460731e93664862b535e",
+      "sourceName": "contracts/DonationEventLog.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "DonationEventLog"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ILibraryStorage.sol": {
+      "lastModificationDate": 1747576882338,
+      "contentHash": "acb6cc70d64c4e3031d41e27d584b1c3",
+      "sourceName": "contracts/ILibraryStorage.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ILibraryStorage"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ProxyLibrary.sol": {
+      "lastModificationDate": 1747576886825,
+      "contentHash": "73015dcb4d33a5596b665a4f7e3b3d3d",
+      "sourceName": "contracts/ProxyLibrary.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ILibraryStorage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ProxyLibrary"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\IProjectFund.sol": {
+      "lastModificationDate": 1747576972319,
+      "contentHash": "6868602d4d31a33ffb6922306979a42f",
+      "sourceName": "contracts/IProjectFund.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IProjectFund"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\TestProject.sol": {
+      "lastModificationDate": 1747576979845,
+      "contentHash": "9f4ff1300425af1e9c978b90fcebef3a",
+      "sourceName": "contracts/TestProject.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IProjectFund.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "TestProject"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\LibraryStorage.sol": {
+      "lastModificationDate": 1747576884646,
+      "contentHash": "0a943c6da432e5d11d9c7d393f8ef1b5",
+      "sourceName": "contracts/LibraryStorage.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "LibraryStorage"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ProjectFund.sol": {
+      "lastModificationDate": 1747576976405,
+      "contentHash": "29be0da8bbf3f36b4ba90374a194c5fe",
+      "sourceName": "contracts/ProjectFund.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ProjectFund"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\node_modules\\@openzeppelin\\contracts\\utils\\ReentrancyGuard.sol": {
+      "lastModificationDate": 1748699856549,
+      "contentHash": "190613e556d509d9e9a0ea43dc5d891d",
+      "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\node_modules\\@openzeppelin\\contracts\\utils\\Panic.sol": {
+      "lastModificationDate": 1748699856519,
+      "contentHash": "2133dc13536b4a6a98131e431fac59e1",
+      "sourceName": "@openzeppelin/contracts/utils/Panic.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Panic"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeCast.sol": {
+      "lastModificationDate": 1748699856563,
+      "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SafeCast"
+      ]
+    },
+    "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\Counter.sol": {
+      "lastModificationDate": 1748187016479,
+      "contentHash": "216c9c39823c9a8ab365d1876f4952dc",
+      "sourceName": "contracts/Counter.sol",
+      "solcConfig": {
+        "version": "0.8.29",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.29"
+      ],
+      "artifacts": [
+        "Counter"
+      ]
+    }
+  }
+}
