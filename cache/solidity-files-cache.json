@@ -78,8 +78,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ERC20Base.sol": {
-      "lastModificationDate": 1747576840439,
-      "contentHash": "dbfc021bfbc70a0d96476c4df74b88cf",
+      "lastModificationDate": 1748703242600,
+      "contentHash": "9567ad44b91a66a79db92026d1de3b82",
       "sourceName": "contracts/ERC20Base.sol",
       "solcConfig": {
         "version": "0.8.29",
@@ -232,7 +232,7 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\AToken.sol": {
-      "lastModificationDate": 1747576835582,
+      "lastModificationDate": 1748703240637,
       "contentHash": "ab2f9bfc29bece4ae4f83db299b17136",
       "sourceName": "contracts/AToken.sol",
       "solcConfig": {
@@ -270,8 +270,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\BToken.sol": {
-      "lastModificationDate": 1748701436907,
-      "contentHash": "c09e32f57a13133e33c7695940398940",
+      "lastModificationDate": 1748703238401,
+      "contentHash": "cf1aa54f226ef8d1c483b7e233f561b0",
       "sourceName": "contracts/BToken.sol",
       "solcConfig": {
         "version": "0.8.29",
@@ -308,8 +308,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\DonationEventLog.sol": {
-      "lastModificationDate": 1747576670957,
-      "contentHash": "fc167c1eef3c460731e93664862b535e",
+      "lastModificationDate": 1748780823191,
+      "contentHash": "94cc6bad96ecc15944549ff930f17ad1",
       "sourceName": "contracts/DonationEventLog.sol",
       "solcConfig": {
         "version": "0.8.29",

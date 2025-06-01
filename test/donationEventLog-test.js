@@ -68,12 +68,13 @@ it("should withdraw to owner", async function() {
     
     //withdraw
     await expect(donationeventlog.connect(user).withdrawAll(amountToWithdraw)).to.be.revertedWith("You are not the owner!");
+    await expect(donationeventlog.connect(owner).withdrawAll(ethers.parseEther("0"))).to.be.revertedWith("need ETH");
+    await expect(donationeventlog.connect(owner).withdrawAll(ethers.parseEther("20"))).to.be.revertedWith("wrong amount");
     await donationeventlog.connect(owner).withdrawAll(amountToWithdraw);
     
     const ownerBalanceAfter = await ethers.provider.getBalance(owner.address);
     contractBalance = await ethers.provider.getBalance(donationeventlog.target);
     expect(ownerBalanceAfter).to.be.gt(ownerBalanceBefore);
-
 });
 });
 
