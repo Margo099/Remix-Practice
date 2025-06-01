@@ -45,6 +45,7 @@ contract DonationEventLog {
 
     function withdrawAll(uint _amount) public onlyOwner {
         require(_amount > 0, "need ETH");
+        require(_amount <= address(this).balance, "wrong amount");
         payable(owner).transfer(_amount);
     }
 }
