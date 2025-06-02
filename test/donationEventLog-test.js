@@ -12,7 +12,7 @@ describe("DonationEventLog", function () {
 
         snapshotId = await network.provider.send("evm_snapshot");
     });
-this.afterEach(async function () {
+afterEach(async function () {
         await network.provider.send("evm_revert", [snapshotId]);
     });
 it("should check if donation goes well", async function() {
