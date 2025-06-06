@@ -25,8 +25,8 @@ contract LibraryStorage {
     }
     function borrowBook(uint bookId) external {
         require(bookId < books.length, "Wrong ID");
-        require(books[bookId].owner == address(0), "Book already taken!");
-        require(bookOwner[msg.sender] ==0, "U've already taken a book!");
+        require(bookOwner[msg.sender] == 0, "U've already taken a book!");
+require(books[bookId].owner == address(0), "Book already taken!");
         books[bookId].owner=msg.sender;
         bookOwner[msg.sender]= bookId + 1;
         books[bookId].dueDate= block.timestamp + 7 days;

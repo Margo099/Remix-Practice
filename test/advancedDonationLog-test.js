@@ -36,7 +36,7 @@ it("should check if donation is processed right", async function(){
     expect(donations[0].timestamp).to.be.a("bigint");
 
     //check total send
-    const totalSent = await advanceddonationlog.getMyDonation();
+    const totalSent = await advanceddonationlog.connect(user).getMyDonation();
     expect(totalSent).to.equal(donationAmount);
 
     //check if event is emited
@@ -47,8 +47,8 @@ it("should check if donation is processed right", async function(){
 // should push several donations into donations[]", async function (){
 it("should push several donations into donations[] ", async function (){
     const _message = "Test";
-    advanceddonationlog.connect(user).donate(_message, { value: donationAmount});
-    advanceddonationlog.connect(user).donate(_message, { value: donationAmount});
+    await advanceddonationlog.connect(user).donate(_message, { value: donationAmount});
+    await advanceddonationlog.connect(user).donate(_message, { value: donationAmount});
 
     const donations = await advanceddonationlog.getAllDonation();
     expect(donations.length).to.equal(2);
