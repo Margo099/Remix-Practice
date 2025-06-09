@@ -78,8 +78,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ERC20Base.sol": {
-      "lastModificationDate": 1748703242600,
-      "contentHash": "9567ad44b91a66a79db92026d1de3b82",
+      "lastModificationDate": 1749490119106,
+      "contentHash": "95eb108861dcb71f01f1ffb851bc3138",
       "sourceName": "contracts/ERC20Base.sol",
       "solcConfig": {
         "version": "0.8.29",
@@ -232,8 +232,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\AToken.sol": {
-      "lastModificationDate": 1748703240637,
-      "contentHash": "ab2f9bfc29bece4ae4f83db299b17136",
+      "lastModificationDate": 1749489670736,
+      "contentHash": "41c0be6ca268a3d5fd0836bd9aee6816",
       "sourceName": "contracts/AToken.sol",
       "solcConfig": {
         "version": "0.8.29",
@@ -270,8 +270,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\BToken.sol": {
-      "lastModificationDate": 1748703238401,
-      "contentHash": "cf1aa54f226ef8d1c483b7e233f561b0",
+      "lastModificationDate": 1749489680121,
+      "contentHash": "3f64f90cba38247f09f6203bcc4596b8",
       "sourceName": "contracts/BToken.sol",
       "solcConfig": {
         "version": "0.8.29",
@@ -492,8 +492,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\LibraryStorage.sol": {
-      "lastModificationDate": 1747576884646,
-      "contentHash": "0a943c6da432e5d11d9c7d393f8ef1b5",
+      "lastModificationDate": 1749233081761,
+      "contentHash": "da9064d5a014fffc0728edfe722a1a3c",
       "sourceName": "contracts/LibraryStorage.sol",
       "solcConfig": {
         "version": "0.8.29",

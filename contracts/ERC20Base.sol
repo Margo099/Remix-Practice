@@ -32,7 +32,7 @@ contract ERC20Base is IERC20 {
     function symbol() external view override returns(string memory){
         return _symbol;
     }
-    function decimals() external pure override returns(uint) {
+    function decimals() public pure override returns(uint) {
         return 18;
     }
     function totalSupply() public view override returns(uint) {

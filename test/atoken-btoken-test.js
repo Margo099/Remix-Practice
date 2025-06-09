@@ -7,7 +7,7 @@ const tokenConfigs = [
 ];
 
 for (const config of tokenConfigs) {
-    describe(${config.name}, function () {
+    describe(`${config.name}`, function () {
         let owner, tokenPrice, user1, user2, token, snapshotId;
 
         beforeEach(async function () {
@@ -20,7 +20,7 @@ for (const config of tokenConfigs) {
             snapshotId = await network.provider.send("evm_snapshot");
         });
 
-        this.afterEach(async function () {
+        afterEach(async function () {
             await network.provider.send("evm_revert", [snapshotId]);
         });
 
@@ -35,17 +35,17 @@ for (const config of tokenConfigs) {
 
         it("buy correct value", async function () {
             expect(tokenPrice).to.equal(ethers.parseEther("0.01"));
-            const numberOfTokens = 10;
+            const numberOfTokens = 10n;
 
-            // mint tokens to contract
-            await token.connect(owner).mint(token.target, ethers.parseEther("100"));
+            const tokenAddress = await token.getAddress();
 
             //check if the wrong msg.value 
             const wrongValue = ethers.parseEther("0.05");
-            await expect(token.connect(user1).buyTokens(numberOfTokens , { value: wrongValue })).to.be.revertedWith("Incorrect ETH amount sent");
+            await expect(token.connect(user1).buyTokens(numberOfTokens , { value: wrongValue })
+            ).to.be.revertedWith("Incorrect ETH amount sent");
 
             //check if msg.value is equal tokenPrice*numberOfTokens (price with fee)
-            const valueToSend = ethers.parseEther("0.01").mul(numberOfTokens);
+            const valueToSend = ethers.parseEther("0.01") * numberOfTokens;
             await token.connect(user1).buyTokens(numberOfTokens, { value : valueToSend });
 
             //check user Balance
@@ -57,15 +57,14 @@ for (const config of tokenConfigs) {
             expect(tokensSold).to.equal(ethers.parseEther("10"));
 
             //check contract balance
-            const contractBalance = await token.balanceOf(token.target);
-            expect(contractBalance).to.equal(ethers.parseEther("90"));
+            const contractBalance = await token.balanceOf(tokenAddress);
+            expect(contractBalance).to.equal(ethers.parseEther("990"));
         });
-
         it("transfer tokens", async function () {
             const amount = ethers.parseEther("10");
 
             //mint tokens to user1
-            await token.connect(owner).mint(user1.address, ethers.parseEther("100"));
+            await token.connect(owner).mint(ethers.parseEther("100"), user1.address);
 
             //check if balance of user1 is greater then amount
             const amountToSend = await token.balanceOf(user1.address);
@@ -87,15 +86,15 @@ for (const config of tokenConfigs) {
 
         it("should revert transfer to zero address", async function () {
             const zeroAddress = "0x0000000000000000000000000000000000000000";
-            await token.connect(owner).mint(user1.address, ethers.parseEther("100"));
+            await token.connect(owner).mint(ethers.parseEther("100"), user1.address);
 
             await expect(
-                token.connect(owner).transfer(ethers.ZeroAddress, ethers.parseEther("10"))
+                token.connect(user1).transfer(ethers.ZeroAddress, ethers.parseEther("10"))
             ).to.be.revertedWith("invalid address");
         });
 
         it("should revert transfer with zero amount", async function () {
-            await token.connect(owner).mint(user1.address, ethers.parseEther("10"));
+            await token.connect(owner).mint(ethers.parseEther("10"), user1.address);
             await expect(token.connect(user1).transfer(user2.address, 0)).to.be.revertedWith("not enough tokens");
         });
     });
