@@ -6,10 +6,12 @@ import "./ERC20Base.sol";
 contract BToken is ERC20Base {
     uint public tokenPrice;
     uint public tokensSold;
+    address public tokenSwap;
     event Received(address sender, uint amount);
     constructor(address exchanger, uint _tokenPrice) ERC20Base("BToken", "B", 0, exchanger) {
          tokenPrice = _tokenPrice;
-        mint(1000 * 10**18, address(this));
+         tokenSwap = exchanger;
+         _grantRole(MINTER_ROLE, tokenSwap);
     }
     function _beforeTokenTransfer(
         address from,
@@ -21,12 +23,6 @@ contract BToken is ERC20Base {
             }
         require(to != address(0), "invalid address");
     }
-    function _transfer(address from, address to, uint amount) internal virtual {
-    require(balances[from] >= amount, "Not enough balance");
-    balances[from] -= amount;
-    balances[to] += amount;
-    emit Transfer(from, to, amount);
-    }
      function buyTokens(uint numberOfTokens) external payable {
         // keep track of number of tokens sold
         // require that a contract have enough tokens
@@ -35,7 +31,8 @@ contract BToken is ERC20Base {
         uint scaledAmount = numberOfTokens * (10 ** decimals());
         require(msg.value == tokenPrice*numberOfTokens, "Incorrect ETH amount sent");
         require(this.balanceOf(address(this)) >= scaledAmount, "Not enough tokens");
-        _transfer(address(this), msg.sender, scaledAmount);
+        bool success= transfer(msg.sender, scaledAmount);
+        require(success, "Transfer failed");
         tokensSold += scaledAmount;
     }
     receive() external payable {

@@ -22,6 +22,7 @@ contract TokenSwap is ReentrancyGuard {
     event SetNewFees(uint _fees);
     event TokenSwapped(address indexed user, string direction, uint amountIn, uint amountOut, uint fees);
     event SetNewRatio(uint indexed _ratio);
+    
     constructor(address _tokenA, address _tokenB) {
     admin = payable(msg.sender);
 

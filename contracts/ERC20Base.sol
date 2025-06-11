@@ -2,10 +2,12 @@
 pragma solidity ^0.8.29;
 
 import "./IERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract ERC20Base is IERC20 {
+contract ERC20Base is IERC20, AccessControl {
     address public owner;
     uint public totalTokens;
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     mapping(address => uint) public balances;
     mapping(address => mapping(address => uint)) public allowances;
 
@@ -24,6 +26,9 @@ contract ERC20Base is IERC20 {
         _name = name_;
         _symbol = symbol_;
         owner = msg.sender;
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);  
+
         _mint(initialSupply, exchanger);
     }
     function name() external view override returns(string memory) {
@@ -41,7 +46,7 @@ contract ERC20Base is IERC20 {
     function balanceOf(address account) public view override returns(uint) {
         return balances[account];
     }
-    function transfer(address to, uint amount) external override enoughBalance(msg.sender, amount) returns(bool){
+    function transfer(address to, uint amount) public override enoughBalance(msg.sender, amount) returns(bool){
         _beforeTokenTransfer(msg.sender, to, amount);
         balances[msg.sender]-=amount;
         balances[to]+=amount;
@@ -57,7 +62,7 @@ contract ERC20Base is IERC20 {
         emit Transfer(sender, recipient, amount);
         return true;
     }
-    function mint(uint amount, address to) public onlyOwner {
+    function mint(uint amount, address to) public onlyRole(MINTER_ROLE) {
         _mint(amount, to);
     }
     function _mint(uint amount, address to) internal {
