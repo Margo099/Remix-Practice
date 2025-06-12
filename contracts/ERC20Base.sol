@@ -15,7 +15,7 @@ contract ERC20Base is IERC20, AccessControl {
     string private _symbol;
 
     modifier enoughBalance(address _from, uint _amount) {
-        require(balanceOf(_from) >= _amount, "Not enough tokens!");
+        require(balanceOf(_from) >= _amount, "You have too low amount of tokens");
         _;
     }
     modifier onlyOwner() {
@@ -52,6 +52,12 @@ contract ERC20Base is IERC20, AccessControl {
         balances[to]+=amount;
         emit Transfer(msg.sender, to, amount);
         return true;
+    }
+    function _transfer(address from, address to, uint amount) internal {
+    _beforeTokenTransfer(from, to, amount);
+    balances[from] -= amount;
+    balances[to] += amount;
+    emit Transfer(from, to, amount);
     }
     function transferFrom(address sender, address recipient, uint amount) public override returns (bool) {
         require(allowances[sender][msg.sender] >= amount, "Allowance too low");

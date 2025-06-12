@@ -28,13 +28,12 @@ contract AToken is ERC20Base {
         // require that a contract have enough tokens
         // require tha value sent is equal to token price
         // trigger sell event
-        uint scaledAmount = numberOfTokens * (10 ** decimals());
-        require(msg.value == tokenPrice*numberOfTokens, "Incorrect ETH amount sent");
+         uint scaledAmount = numberOfTokens * (10 ** decimals());
+        require(msg.value == tokenPrice * numberOfTokens, "Incorrect ETH amount sent");
         require(this.balanceOf(address(this)) >= scaledAmount, "Not enough tokens");
-        bool success= transfer(msg.sender, scaledAmount);
-        require(success, "Transfer failed");
+        _transfer(address(this), msg.sender, scaledAmount);
         tokensSold += scaledAmount;
-    }
+}
     receive() external payable {
         emit Received(msg.sender, msg.value);
     }
