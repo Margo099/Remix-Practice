@@ -20,11 +20,11 @@ for (const config of tokenConfigs) {
     await token.waitForDeployment();
     tokenAddress = await token.getAddress();
 
-    // 👇 Минтим токены контракту, чтобы он мог продавать их
+    // mint tokens to contract
     const totalSupply = ethers.parseEther("1000");
     await token.connect(owner).mint(totalSupply, tokenAddress);
 
-    // Проверим баланс контракта
+    // check contract balance
     const contractBalance = await token.balanceOf(tokenAddress);
     expect(contractBalance).to.equal(totalSupply);
 
@@ -46,30 +46,30 @@ for (const config of tokenConfigs) {
 
         it("buy correct value", async function () {
     const numberOfTokens = 10n;
-    const scaledAmount = ethers.parseEther("10"); // 10 токенов с 18 знаками
+    const scaledAmount = ethers.parseEther("10"); // 10 tokens with 18 symbols
 
-    // Проверим, что цена токена правильная
+    // check that the price is correct
     expect(tokenPrice).to.equal(ethers.parseEther("0.01"));
 
-    // Случай: неправильное значение ETH
+    // If ETH value is wrong
     const wrongValue = ethers.parseEther("0.05");
     await expect(
         token.connect(user1).buyTokens(numberOfTokens, { value: wrongValue })
     ).to.be.revertedWith("Incorrect ETH amount sent");
 
-    // Случай: правильное значение ETH
+    // if ETH value is correct
     const correctValue = tokenPrice * numberOfTokens;
     await token.connect(user1).buyTokens(numberOfTokens, { value: correctValue });
 
-    // Проверим баланс пользователя
+    // check user balance
     const userBalance = await token.balanceOf(user1.address);
     expect(userBalance).to.equal(scaledAmount);
 
-    // Проверим tokensSold
+    // check tokensSold
     const tokensSold = await token.tokensSold();
     expect(tokensSold).to.equal(scaledAmount);
 
-    // Проверим остаток на контракте
+    // check contract balance now
     const contractBalance = await token.balanceOf(tokenAddress);
     expect(contractBalance).to.equal(ethers.parseEther("990"));
     });
