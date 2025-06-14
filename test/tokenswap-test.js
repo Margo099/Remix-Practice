@@ -64,25 +64,28 @@ it("should swapTKA : A->B token", async function(){
     await aToken.connect(owner).mint(amountTKA, user1.address);
 
     //revert if there is no approve to swap
-    await expect(tokenSwap.connect(user1).swapTKA(amountTKA)).to.be.revertedWith("Approve TokenA first");
+    await expect(tokenSwap.connect(user1).swapTKA(amountTKA)
+    ).to.be.revertedWith("Approve TokenA first");
 
     //gain approve to TokenSwap to transfer AToken
     await aToken.connect(user1).approve(await tokenSwap.getAddress(), amountTKA);
 
-    //user1 make a swap A->B
+    //user1 makes a swap A->B
     await expect(tokenSwap.connect(user1).swapTKA(ethers.parseEther("0"))
     ).to.be.revertedWith("Not enough TokenA");
     await expect(tokenSwap.connect(user1).swapTKA(ethers.parseEther("15"))
     ).to.be.revertedWith("Insufficient AToken balance");
+    
     await tokenSwap.connect(user1).swapTKA(amountTKA);
 
     const expectedB = ethers.parseEther("19.6"); //1A=2B, fees 2% => 10A=20B -2% = 19.6
 
+    //check the expected balance of user1
     const user1BalanceB = await bToken.balanceOf(user1.address);
     expect(user1BalanceB).to.equal(expectedB);
 
 });
-it("should emit the event TokenSwapped", async function(){
+it("should emit the event TokenSwapped A->B", async function(){
     const fees = await tokenSwap.connect(owner).getFees();
     expect(fees).to.equal(2);
 
@@ -102,5 +105,57 @@ it("should emit the event TokenSwapped", async function(){
     await expect(tokenSwap.connect(user1).swapTKA(amountTKA)
     ).to.emit(tokenSwap, "TokenSwapped").withArgs(user1.address, "A->B", amountTKA, exchangeAmount, fees);
 });
+it("should swapTKB : B->A", async function(){
+     const fees = await tokenSwap.connect(owner).getFees();
+    expect(fees).to.equal(2);
 
+    const ratio = await tokenSwap.connect(owner).getRatio();
+    expect(ratio).to.equal(2);
+
+    const amountTKB = ethers.parseEther("20");
+
+    //user1 buys B token
+    await bToken.connect(owner).mint(amountTKB, user1.address);
+
+    //revert if there is no approve for swap
+    await expect(tokenSwap.connect(user1).swapTKB(amountTKB)
+    ).to.be.revertedWith("Approve TokenB first");
+
+    //gain the approve to swap BToken
+    await bToken.connect(user1).approve(await tokenSwap.getAddress(), amountTKB);
+
+    //user1 makes swap B->A
+    await expect(tokenSwap.connect(user1).swapTKB(ethers.parseEther("0"))
+    ).to.be.revertedWith("Not enough TokenB");
+    await expect(tokenSwap.connect(user1).swapTKB(ethers.parseEther("30"))
+    ).to.be.revertedWith("Insufficient BToken balance");
+
+    await tokenSwap.connect(user1).swapTKB(amountTKB);
+
+    const expectedA = ethers.parseEther("9.8"); //1A=2B, fees 2% => 20B=10A -2% = 9.8
+
+    //check the expected balance of user1
+    const user1BalanceA = await aToken.balanceOf(user1.address);
+    expect(user1BalanceA).to.equal(expectedA);
+});
+it("should emit the event TokenSwapped B->A", async function(){
+    const fees = await tokenSwap.connect(owner).getFees();
+    expect(fees).to.equal(2);
+
+    const ratio = await tokenSwap.connect(owner).getRatio();
+    expect(ratio).to.equal(2);
+
+    const amountTKB = ethers.parseEther("20");
+
+    //user1 buys BToken 
+    await bToken.connect(owner).mint(amountTKB, user1.address);
+    const exchangeAmount = ethers.parseEther("9.8");
+    
+    //gain approve to TokenSwap to transfer BToken
+    await bToken.connect(user1).approve(await tokenSwap.getAddress(), amountTKB);
+    
+    //emit the event
+    await expect(tokenSwap.connect(user1).swapTKB(amountTKB)
+    ).to.emit(tokenSwap, "TokenSwapped").withArgs(user1.address, "B->A", amountTKB, exchangeAmount, fees);
+});
 });
