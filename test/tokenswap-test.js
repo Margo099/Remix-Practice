@@ -158,4 +158,46 @@ it("should emit the event TokenSwapped B->A", async function(){
     await expect(tokenSwap.connect(user1).swapTKB(amountTKB)
     ).to.emit(tokenSwap, "TokenSwapped").withArgs(user1.address, "B->A", amountTKB, exchangeAmount, fees);
 });
+it("should check that its possible to buy ATokens", async function(){
+    const tokenAmount = 10;
+    const scaledAmount = ethers.parseEther(tokenAmount.toString());
+    const tokenPrice = await aToken.tokenPrice(); //0.01 ETH per token
+    const totalCost = tokenPrice * BigInt(tokenAmount);
+
+    //make a sure that aToken has enough tokens on its balance
+    await aToken.connect(owner).mint(scaledAmount, await aToken.getAddress());
+
+    const balanceBefore = await aToken.balanceOf(await tokenSwap.getAddress());
+
+    //Purchase ATokens through TokenSwap contract
+    await expect(tokenSwap.connect(user1).buyTokensA(tokenAmount, {value: totalCost})
+    ).to.be.revertedWith("Only admin");
+
+    await tokenSwap.connect(owner).buyTokensA(tokenAmount, {value: totalCost});
+
+    //check that tokens are on the balance
+    const balanceAfter = await aToken.balanceOf(await tokenSwap.getAddress());
+    expect(balanceAfter - balanceBefore).to.equal(scaledAmount);
+});
+it("should check that its possible to buy B tokens", async function(){
+    const tokenBamount = 10;
+    const scaledAmount = ethers.parseEther(tokenBamount.toString());
+    const tokenPrice = await bToken.tokenPrice(); //0.01 ETH per token
+    const totalCost = tokenPrice * BigInt(tokenBamount);
+
+    //make a sure that bToken has enough tokens on its balance
+    await bToken.connect(owner).mint(scaledAmount, await bToken.getAddress());
+
+    const tokenBBefore = await bToken.balanceOf(await tokenSwap.getAddress());
+
+    //Purchase BTokens through TokenSwap contract
+    await expect(tokenSwap.connect(user1).buyTokensB(tokenBamount, {value: totalCost})
+    ).to.be.revertedWith("Only admin");
+
+    await tokenSwap.connect(owner).buyTokensB(tokenBamount, {value : totalCost});
+
+    //check that tokens are on the balance
+    const balanceBafter = await bToken.balanceOf(await tokenSwap.getAddress());
+    expect(balanceBafter-tokenBBefore).to.equal(scaledAmount);
+});
 });

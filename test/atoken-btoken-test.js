@@ -32,19 +32,19 @@ for (const config of tokenConfigs) {
     });
 
         afterEach(async function () {
-            await network.provider.send("evm_revert", [snapshotId]);
+        await network.provider.send("evm_revert", [snapshotId]);
         });
 
-        it("should have correct name and symbol", async function () {
-            expect(await token.name()).to.equal(config.name);
-            expect(await token.symbol()).to.equal(config.symbol);
+    it("should have correct name and symbol", async function () {
+        expect(await token.name()).to.equal(config.name);
+        expect(await token.symbol()).to.equal(config.symbol);
         });
 
-        it("check token price", async function () {
-            expect(await token.tokenPrice()).to.equal(tokenPrice);
+    it("check token price", async function () {
+        expect(await token.tokenPrice()).to.equal(tokenPrice);
         });
 
-        it("buy correct value", async function () {
+    it("buy correct value", async function () {
     const numberOfTokens = 10n;
     const scaledAmount = ethers.parseEther("10"); // 10 tokens with 18 symbols
 
@@ -73,31 +73,31 @@ for (const config of tokenConfigs) {
     const contractBalance = await token.balanceOf(tokenAddress);
     expect(contractBalance).to.equal(ethers.parseEther("990"));
     });
-        it("transfer tokens", async function () {
-            const amount = ethers.parseEther("10");
+    it("transfer tokens", async function () {
+        const amount = ethers.parseEther("10");
 
-            //mint tokens to user1
-            await token.connect(owner).mint(ethers.parseEther("100"), user1.address);
+         //mint tokens to user1
+        await token.connect(owner).mint(ethers.parseEther("100"), user1.address);
 
-            //check if balance of user1 is greater then amount
-            const amountToSend = await token.balanceOf(user1.address);
-            expect(amountToSend).to.be.at.least(amount);
+        //check if balance of user1 is greater then amount
+        const amountToSend = await token.balanceOf(user1.address);
+        expect(amountToSend).to.be.at.least(amount);
 
-            //transfer from user1 to user2
-            await token.connect(user1).transfer(user2.address, amount);
+        //transfer from user1 to user2
+        await token.connect(user1).transfer(user2.address, amount);
 
-            //check user2 balance 
-            const user2Balance = await token.balanceOf(user2.address);
-            expect(user2Balance).to.equal(amount);
+        //check user2 balance 
+        const user2Balance = await token.balanceOf(user2.address);
+        expect(user2Balance).to.equal(amount);
 
-            //check user1 balance
-            const user1Balance = await token.balanceOf(user1.address);
-            expect(user1Balance).to.equal(ethers.parseEther("90"));
+        //check user1 balance
+        const user1Balance = await token.balanceOf(user1.address);
+        expect(user1Balance).to.equal(ethers.parseEther("90"));
 
-            await expect(token.connect(user1).transfer(user2.address, amount)).to.emit(token, "Transfer").withArgs(user1.address, user2.address, amount);
+        await expect(token.connect(user1).transfer(user2.address, amount)).to.emit(token, "Transfer").withArgs(user1.address, user2.address, amount);
         });
 
-        it("should revert transfer to zero address", async function () {
+    it("should revert transfer to zero address", async function () {
             const zeroAddress = "0x0000000000000000000000000000000000000000";
             await token.connect(owner).mint(ethers.parseEther("100"), user1.address);
 
@@ -106,7 +106,7 @@ for (const config of tokenConfigs) {
             ).to.be.revertedWith("invalid address");
         });
 
-        it("should revert transfer with zero amount", async function () {
+    it("should revert transfer with zero amount", async function () {
             await token.connect(owner).mint(ethers.parseEther("10"), user1.address);
             await expect(token.connect(user1).transfer(user2.address, 0)).to.be.revertedWith("not enough tokens");
         });
