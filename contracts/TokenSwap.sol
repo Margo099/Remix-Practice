@@ -102,14 +102,23 @@ contract TokenSwap is ReentrancyGuard {
     emit TokensWithdrawn(token, amount);
     }
 
-    function withdrawETH(uint amount) public onlyAdmin {
-    admin.transfer(amount);
+    function withdrawETHFromAToken(uint amount) public onlyAdmin {
+    tokenAInstance.withdrawETH(amount);
     emit ETHWithdrawn(amount);
     }
-
+    function withdrawETHFromBToken(uint amount) public onlyAdmin{
+        tokenBInstance.withdrawETH(amount);
+        emit ETHWithdrawn(amount);
+    }
+    function withdrawETH(uint amount) public onlyAdmin {
+        admin.transfer(amount);
+        emit ETHWithdrawn(amount);
+    }
     function changeAdmin(address newAdmin) public onlyAdmin {
     require(newAdmin != address(0), "cannot be 0 address");
     emit AdminChanged(admin, newAdmin);
     admin = payable(newAdmin);
+    }
+    receive() external payable {
     }
     }

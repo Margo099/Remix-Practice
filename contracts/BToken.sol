@@ -8,10 +8,14 @@ contract BToken is ERC20Base {
     uint public tokensSold;
     address public tokenSwap;
     event Received(address sender, uint amount);
-    constructor(address exchanger, uint _tokenPrice) ERC20Base("BToken", "B", 0, exchanger) {
+    constructor(address _initialMinterAndAdmin, uint _tokenPrice) ERC20Base("BToken", "B", 0, _initialMinterAndAdmin) {
          tokenPrice = _tokenPrice;
-         tokenSwap = exchanger;
+         tokenSwap = _initialMinterAndAdmin;
          _grantRole(MINTER_ROLE, tokenSwap);
+    }
+    function setTokenSwapAddress(address _tokenSwapAddress) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(_tokenSwapAddress != address(0), "TokenSwap address cannot be zero");
+        tokenSwap = _tokenSwapAddress;
     }
     function _beforeTokenTransfer(
         address from,
@@ -34,6 +38,10 @@ contract BToken is ERC20Base {
         _transfer(address(this), msg.sender, scaledAmount);
         tokensSold += scaledAmount;
     }
+    function withdrawETH(uint amount) public {
+        require(msg.sender == tokenSwap, "Only TokenSwap can withdraw");
+        payable(tokenSwap).transfer(amount);
+}
     receive() external payable {
         emit Received(msg.sender, msg.value);
     }

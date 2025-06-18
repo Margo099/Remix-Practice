@@ -10,17 +10,19 @@ beforeEach(async function(){
 
     AToken = await ethers.getContractFactory("AToken");
     BToken = await ethers.getContractFactory("BToken");
-   
+    TokenSwap = await ethers.getContractFactory("TokenSwap");
     const tokenPrice = ethers.parseEther("0.01");
    
-   aToken = await AToken.deploy(owner.address, tokenPrice);
-   bToken = await BToken.deploy(owner.address, tokenPrice);
-   await aToken.waitForDeployment();
-   await bToken.waitForDeployment();
+    aToken = await AToken.deploy(owner.address, tokenPrice);
+    bToken = await BToken.deploy(owner.address, tokenPrice);
+    await aToken.waitForDeployment();
+    await bToken.waitForDeployment();
    
-    TokenSwap = await ethers.getContractFactory("TokenSwap");
     tokenSwap = await TokenSwap.deploy(await aToken.getAddress(), bToken.getAddress());
     await tokenSwap.waitForDeployment();
+
+    await aToken.connect(owner).setTokenSwapAddress(await tokenSwap.getAddress());
+    await bToken.connect(owner).setTokenSwapAddress(await tokenSwap.getAddress());
 
     //mint tokens for TokenSwap so it will be possible to make a swap operations
     await aToken.connect(owner).mint(ethers.parseEther("1000"), await tokenSwap.getAddress());
@@ -199,5 +201,74 @@ it("should check that its possible to buy B tokens", async function(){
     //check that tokens are on the balance
     const balanceBafter = await bToken.balanceOf(await tokenSwap.getAddress());
     expect(balanceBafter-tokenBBefore).to.equal(scaledAmount);
+});
+it("should withdraw tokens", async function(){
+    const tokenAmount = 10;
+    const scaledAmount = ethers.parseEther(tokenAmount.toString());
+    const tokenPrice = await aToken.tokenPrice();
+    const totalCost = tokenPrice * BigInt(tokenAmount);
+
+    //mint
+    await aToken.connect(owner).mint(ethers.parseEther("100"), await aToken.getAddress());
+
+    //check buy tokens for tokenSwap 
+    await tokenSwap.connect(owner).buyTokensA(tokenAmount, {value: totalCost});
+
+    //check owner token balance
+    const ownerBalance = await aToken.balanceOf(owner.address);
+    
+    //withdraw tokens
+    await tokenSwap.connect(owner).withdrawTokens(await aToken.getAddress(), ethers.parseEther("10"));
+
+    //again check token balance of the owner and then compare
+    const ownerBalance2 = await aToken.balanceOf(owner.address);
+    expect(ownerBalance2).to.be.gt(ownerBalance);
+});
+it("should withdraw ETH", async function(){
+    const tokenAmount = 10;
+    const scaledAmount = ethers.parseEther(tokenAmount.toString());
+    const tokenPrice = await aToken.tokenPrice();
+    const totalCost = tokenPrice* BigInt(tokenAmount);
+
+    //check owner balance before transaction
+    const ownerETHBlalanceBefore = await ethers.provider.getBalance(owner.address);
+
+    //mint
+    await aToken.connect(owner).mint(ethers.parseEther("100"), await aToken.getAddress());
+    
+    //buy tokens
+    await tokenSwap.connect(owner).buyTokensA(tokenAmount, {value: totalCost});
+
+    const balanceA = await ethers.provider.getBalance(await aToken.getAddress());
+    console.log("ETH на AToken:", ethers.formatEther(balanceA)); 
+    const balance = await ethers.provider.getBalance(await tokenSwap.getAddress());
+    console.log("ETH on balance:", ethers.formatEther(balance));
+
+    // Шаг 1: Выводим ETH из контракта AToken в контракт TokenSwap
+    // ETH переходит от AToken к TokenSwap.
+    // msg.sender для AToken.withdrawETH будет TokenSwap.address
+    await tokenSwap.connect(owner).withdrawETHFromAToken(totalCost);
+
+    // Проверяем баланс ETH в AToken после первого вывода (должен быть 0)
+    const balanceAAfterWithdraw = await ethers.provider.getBalance(await aToken.getAddress());
+    expect(balanceAAfterWithdraw).to.equal(0);
+
+   // Проверяем баланс ETH в TokenSwap после первого вывода (должен быть totalCost)
+    const balanceTokenSwapAfterFirstWithdraw = await ethers.provider.getBalance(await tokenSwap.getAddress());
+    expect(balanceTokenSwapAfterFirstWithdraw).to.equal(totalCost);
+
+    // Шаг 2: Выводим ETH из контракта TokenSwap к owner
+    // ETH переходит от TokenSwap к owner.
+    // msg.sender для TokenSwap.withdrawETH будет owner.address
+    const tx = await tokenSwap.connect(owner).withdrawETH(totalCost); // Возвращаем totalCost owner'у
+    const receipt = await tx.wait(); // Ждем подтверждения транзакции, чтобы получить gasUsed
+    const gasUsed = receipt.gasUsed * receipt.gasPrice; // Рассчитываем стоимость газа для этой транзакции
+
+    // Получаем конечный баланс owner
+    const ownerETHBalanceAfter = await ethers.provider.getBalance(owner.address);
+
+    // Проверяем, что ETH на балансе TokenSwap теперь 0
+    const balanceTokenSwapFinal = await ethers.provider.getBalance(await tokenSwap.getAddress());
+    expect(balanceTokenSwapFinal).to.equal(0);
 });
 });

@@ -74,6 +74,6 @@ it("should withdraw correctly", async function (){
     await advanceddonationlog.connect(owner).withdrawAll(amountToWithdraw);
     const ownerBalanceAfter = await ethers.provider.getBalance(owner.address);
     expect(ownerBalanceAfter).to.be.gt(ownerBalanceBefore);
-    
+   
 });
 });
