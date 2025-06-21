@@ -244,30 +244,30 @@ it("should withdraw ETH", async function(){
     const balance = await ethers.provider.getBalance(await tokenSwap.getAddress());
     console.log("ETH on balance:", ethers.formatEther(balance));
 
-    // Шаг 1: Выводим ETH из контракта AToken в контракт TokenSwap
-    // ETH переходит от AToken к TokenSwap.
-    // msg.sender для AToken.withdrawETH будет TokenSwap.address
+    //Step 1: Withdraw ETH from AToken to TokenSwap
+    //ETH transfer from AToken to TokeSwap
+    // msg.sender for AToken.withdrawETH will be TokenSwap.address
     await tokenSwap.connect(owner).withdrawETHFromAToken(totalCost);
 
-    // Проверяем баланс ETH в AToken после первого вывода (должен быть 0)
+    //Check balance ETH in AToken after first withdraw (must be 0)
     const balanceAAfterWithdraw = await ethers.provider.getBalance(await aToken.getAddress());
     expect(balanceAAfterWithdraw).to.equal(0);
 
-   // Проверяем баланс ETH в TokenSwap после первого вывода (должен быть totalCost)
+    //Check balance ETH in TokenSwap after the first withdraw(must be totalCost)
     const balanceTokenSwapAfterFirstWithdraw = await ethers.provider.getBalance(await tokenSwap.getAddress());
     expect(balanceTokenSwapAfterFirstWithdraw).to.equal(totalCost);
 
-    // Шаг 2: Выводим ETH из контракта TokenSwap к owner
-    // ETH переходит от TokenSwap к owner.
-    // msg.sender для TokenSwap.withdrawETH будет owner.address
-    const tx = await tokenSwap.connect(owner).withdrawETH(totalCost); // Возвращаем totalCost owner'у
-    const receipt = await tx.wait(); // Ждем подтверждения транзакции, чтобы получить gasUsed
-    const gasUsed = receipt.gasUsed * receipt.gasPrice; // Рассчитываем стоимость газа для этой транзакции
+    //Step 2: Withdraw ETH from TokenSwap to owner
+    //ETH comes from TokenSwap to owner
+    //msg.sender for TokenSwap.withdrawETH will be owner.address
+    const tx = await tokenSwap.connect(owner).withdrawETH(totalCost); // Reteurn totalCost to owner
+    const receipt = await tx.wait(); // Wait for transaction approvement to get gasUsed amount
+    const gasUsed = receipt.gasUsed * receipt.gasPrice; //Calculate gas price for this transaction 
 
-    // Получаем конечный баланс owner
+    //Get the final owner balance
     const ownerETHBalanceAfter = await ethers.provider.getBalance(owner.address);
 
-    // Проверяем, что ETH на балансе TokenSwap теперь 0
+    //Check that TokenSwap ETH balance is equal 0 
     const balanceTokenSwapFinal = await ethers.provider.getBalance(await tokenSwap.getAddress());
     expect(balanceTokenSwapFinal).to.equal(0);
 });
