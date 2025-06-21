@@ -85,7 +85,6 @@ it("should swapTKA : A->B token", async function(){
     //check the expected balance of user1
     const user1BalanceB = await bToken.balanceOf(user1.address);
     expect(user1BalanceB).to.equal(expectedB);
-
 });
 it("should emit the event TokenSwapped A->B", async function(){
     const fees = await tokenSwap.connect(owner).getFees();
@@ -160,7 +159,7 @@ it("should emit the event TokenSwapped B->A", async function(){
     await expect(tokenSwap.connect(user1).swapTKB(amountTKB)
     ).to.emit(tokenSwap, "TokenSwapped").withArgs(user1.address, "B->A", amountTKB, exchangeAmount, fees);
 });
-it("should check that its possible to buy ATokens", async function(){
+it("should check that its possible to buy A tokens", async function(){
     const tokenAmount = 10;
     const scaledAmount = ethers.parseEther(tokenAmount.toString());
     const tokenPrice = await aToken.tokenPrice(); //0.01 ETH per token
@@ -202,7 +201,7 @@ it("should check that its possible to buy B tokens", async function(){
     const balanceBafter = await bToken.balanceOf(await tokenSwap.getAddress());
     expect(balanceBafter-tokenBBefore).to.equal(scaledAmount);
 });
-it("should withdraw tokens", async function(){
+it("should withdraw A tokens", async function(){
     const tokenAmount = 10;
     const scaledAmount = ethers.parseEther(tokenAmount.toString());
     const tokenPrice = await aToken.tokenPrice();
@@ -218,13 +217,32 @@ it("should withdraw tokens", async function(){
     const ownerBalance = await aToken.balanceOf(owner.address);
     
     //withdraw tokens
-    await tokenSwap.connect(owner).withdrawTokens(await aToken.getAddress(), ethers.parseEther("10"));
+    await expect(tokenSwap.connect(owner).withdrawTokens(await aToken.getAddress(), ethers.parseEther("10"))
+    ).to.emit(tokenSwap, "TokensWithdrawn").withArgs(aToken.getAddress(), ethers.parseEther("10"));
 
     //again check token balance of the owner and then compare
     const ownerBalance2 = await aToken.balanceOf(owner.address);
     expect(ownerBalance2).to.be.gt(ownerBalance);
 });
-it("should withdraw ETH", async function(){
+it("should withdraw B tokens", async function(){
+    const tokenAmount = 10;
+    const scaledAmount = ethers.parseEther(tokenAmount.toString());
+    const tokenPrice = await bToken.tokenPrice();
+    const totalCost = tokenPrice * BigInt(tokenAmount);
+
+    await bToken.connect(owner).mint(ethers.parseEther("100"), await bToken.getAddress());
+
+    await tokenSwap.connect(owner).buyTokensB(tokenAmount, {value: totalCost});
+
+    const ownerBalance = await bToken.balanceOf(owner.address);
+
+    await expect(tokenSwap.connect(owner).withdrawTokens(await bToken.getAddress(), ethers.parseEther("10"))
+    ).to.emit(tokenSwap, "TokensWithdrawn").withArgs(bToken.getAddress(), ethers.parseEther("10"));
+
+    const ownerBalance2 = await bToken.balanceOf(owner.address);
+    expect(ownerBalance2).to.be.gt(ownerBalance);
+});
+it("should withdraw ETH from A token", async function(){
     const tokenAmount = 10;
     const scaledAmount = ethers.parseEther(tokenAmount.toString());
     const tokenPrice = await aToken.tokenPrice();
@@ -247,7 +265,8 @@ it("should withdraw ETH", async function(){
     //Step 1: Withdraw ETH from AToken to TokenSwap
     //ETH transfer from AToken to TokeSwap
     // msg.sender for AToken.withdrawETH will be TokenSwap.address
-    await tokenSwap.connect(owner).withdrawETHFromAToken(totalCost);
+    await expect(tokenSwap.connect(owner).withdrawETHFromAToken(totalCost)
+    ).to.emit(tokenSwap, "ETHWithdrawn").withArgs(totalCost);
 
     //Check balance ETH in AToken after first withdraw (must be 0)
     const balanceAAfterWithdraw = await ethers.provider.getBalance(await aToken.getAddress());
@@ -262,6 +281,7 @@ it("should withdraw ETH", async function(){
     //msg.sender for TokenSwap.withdrawETH will be owner.address
     const tx = await tokenSwap.connect(owner).withdrawETH(totalCost); // Reteurn totalCost to owner
     const receipt = await tx.wait(); // Wait for transaction approvement to get gasUsed amount
+    expect(receipt.logs.map(log => log.fragment.name)).to.include("ETHWithdrawn");
     const gasUsed = receipt.gasUsed * receipt.gasPrice; //Calculate gas price for this transaction 
 
     //Get the final owner balance
@@ -270,5 +290,70 @@ it("should withdraw ETH", async function(){
     //Check that TokenSwap ETH balance is equal 0 
     const balanceTokenSwapFinal = await ethers.provider.getBalance(await tokenSwap.getAddress());
     expect(balanceTokenSwapFinal).to.equal(0);
+});
+it("should withdraw ETH from B token", async function(){
+    const tokenAmount = 10;
+    const scaledAmount = ethers.parseEther(tokenAmount.toString());
+    const tokenPrice = await bToken.tokenPrice();
+    const totalCost = tokenPrice* BigInt(tokenAmount);
+
+    //check owner balance before transaction
+    const ownerETHBlalanceBefore = await ethers.provider.getBalance(owner.address);
+
+    //mint
+    await bToken.connect(owner).mint(ethers.parseEther("100"), await bToken.getAddress());
+    
+    //buy tokens
+    await tokenSwap.connect(owner).buyTokensB(tokenAmount, {value: totalCost});
+
+    const balanceB = await ethers.provider.getBalance(await bToken.getAddress());
+    console.log("ETH на BToken:", ethers.formatEther(balanceB)); 
+    const balance = await ethers.provider.getBalance(await tokenSwap.getAddress());
+    console.log("ETH on balance:", ethers.formatEther(balance));
+
+    //Step 1: Withdraw ETH from AToken to TokenSwap
+    //ETH transfer from AToken to TokeSwap
+    // msg.sender for AToken.withdrawETH will be TokenSwap.address
+    await expect(tokenSwap.connect(owner).withdrawETHFromBToken(totalCost)
+    ).to.emit(tokenSwap, "ETHWithdrawn").withArgs(totalCost);
+
+    //Check balance ETH in AToken after first withdraw (must be 0)
+    const balanceBAfterWithdraw = await ethers.provider.getBalance(await bToken.getAddress());
+    expect(balanceBAfterWithdraw).to.equal(0);
+
+    //Check balance ETH in TokenSwap after the first withdraw(must be totalCost)
+    const balanceTokenSwapAfterFirstWithdraw = await ethers.provider.getBalance(await tokenSwap.getAddress());
+    expect(balanceTokenSwapAfterFirstWithdraw).to.equal(totalCost);
+
+    //Step 2: Withdraw ETH from TokenSwap to owner
+    //ETH comes from TokenSwap to owner
+    //msg.sender for TokenSwap.withdrawETH will be owner.address
+    const tx = await tokenSwap.connect(owner).withdrawETH(totalCost); // Reteurn totalCost to owner
+    const receipt = await tx.wait(); // Wait for transaction approvement to get gasUsed amount
+    expect(receipt.logs.map(log => log.fragment.name)).to.include("ETHWithdrawn");
+    const gasUsed = receipt.gasUsed * receipt.gasPrice; //Calculate gas price for this transaction 
+
+    //Get the final owner balance
+    const ownerETHBalanceAfter = await ethers.provider.getBalance(owner.address);
+
+    //Check that TokenSwap ETH balance is equal 0 
+    const balanceTokenSwapFinal = await ethers.provider.getBalance(await tokenSwap.getAddress());
+    expect(balanceTokenSwapFinal).to.equal(0);
+});
+it("should check that its possible to change admin",async function(){
+    const newOwner = await user1.address;
+    const oldAdmin = await tokenSwap.admin();
+    expect(oldAdmin).to.equal(owner.address);
+
+    await expect(tokenSwap.connect(owner).changeAdmin(ethers.ZeroAddress)
+    ).to.be.revertedWith("cannot be 0 address");
+    await expect(tokenSwap.connect(user2).changeAdmin(newOwner)
+    ).to.be.revertedWith("Only admin");
+
+    await expect(tokenSwap.connect(owner).changeAdmin(newOwner)
+    ).to.emit(tokenSwap, "AdminChanged").withArgs(oldAdmin, newOwner);
+
+    const updatedOwner = await tokenSwap.admin();
+    expect(updatedOwner).to.equal(newOwner);
 });
 });

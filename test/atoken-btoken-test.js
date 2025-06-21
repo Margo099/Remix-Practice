@@ -108,7 +108,8 @@ for (const config of tokenConfigs) {
 
     it("should revert transfer with zero amount", async function () {
             await token.connect(owner).mint(ethers.parseEther("10"), user1.address);
-            await expect(token.connect(user1).transfer(user2.address, 0)).to.be.revertedWith("not enough tokens");
+            await expect(token.connect(user1).transfer(user2.address, 0)
+            ).to.be.revertedWith("not enough tokens");
         });
     });
 }
