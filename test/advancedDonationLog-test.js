@@ -65,11 +65,11 @@ it("should withdraw correctly", async function (){
 
     //user try to withdraw
     await expect(advanceddonationlog.connect(user).withdrawAll(amountToWithdraw)
-).to.be.revertedWith("U must be an owner!");
+    ).to.be.revertedWith("U must be an owner!");
     await expect(advanceddonationlog.connect(owner).withdrawAll(ethers.parseEther("0"))
-).to.be.revertedWith("need ETH");
+    ).to.be.revertedWith("need ETH");
     await expect(advanceddonationlog.connect(owner).withdrawAll(ethers.parseEther("20"))
-).to.be.revertedWith("wrong amount");
+    ).to.be.revertedWith("wrong amount");
     
     await advanceddonationlog.connect(owner).withdrawAll(amountToWithdraw);
     const ownerBalanceAfter = await ethers.provider.getBalance(owner.address);

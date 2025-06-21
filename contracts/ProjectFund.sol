@@ -42,4 +42,9 @@ contract ProjectFund {
     function getProjectTotal(string memory _projectName) public view returns(uint) {
         return(projectTotal[_projectName]);
     }
+    function withdraw(uint _amount) public onlyOwner {
+        require(_amount > 0, "need ETH");
+        require(_amount <= address(this).balance, "low amount on contract to withdraw");
+        payable(owner).transfer(_amount);
+    }
 }

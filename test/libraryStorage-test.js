@@ -28,7 +28,7 @@ it("should add a book into store", async function (){
     expect(books[0].owner).to.equal(ethers.ZeroAddress);
     expect(books[0].dueDate).to.be.a("bigint");
 });
-it("should check the evnt NewBookAdded", async function () {
+it("should check the event NewBookAdded", async function () {
     const _bookName = "Test book";
     await expect(librarystorage.connect(user).addBook(_bookName)
     ).to.emit(librarystorage, "newBookAdded").withArgs(_bookName, anyValue);
