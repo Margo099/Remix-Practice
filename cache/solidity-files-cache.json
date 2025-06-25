@@ -411,8 +411,8 @@
       ]
     },
     "C:\\Users\\grank\\my-smart-contracts\\Remix-Practice\\contracts\\ProxyLibrary.sol": {
-      "lastModificationDate": 1750599050995,
-      "contentHash": "73015dcb4d33a5596b665a4f7e3b3d3d",
+      "lastModificationDate": 1750877652971,
+      "contentHash": "baadb70e97318bbc5c67511ea9392740",
       "sourceName": "contracts/ProxyLibrary.sol",
       "solcConfig": {
         "version": "0.8.29",

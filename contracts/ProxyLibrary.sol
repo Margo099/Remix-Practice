@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// coverage ignore-file
 pragma solidity ^0.8.0;
 
 import "./ILibraryStorage.sol";
