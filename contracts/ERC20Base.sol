@@ -18,10 +18,6 @@ contract ERC20Base is IERC20, AccessControl {
         require(balanceOf(_from) >= _amount, "You have too low amount of tokens");
         _;
     }
-    modifier onlyOwner() {
-        require(owner == msg.sender, "Not an ownder!");
-        _;
-    }
     constructor(string memory name_, string memory symbol_, uint initialSupply, address exchanger) {
         _name = name_;
         _symbol = symbol_;
@@ -84,6 +80,9 @@ contract ERC20Base is IERC20, AccessControl {
         totalTokens -= amount;
         emit Transfer(from, address(0), amount);
     }
+    function burn(uint amount) public {
+    _burn(msg.sender, amount);
+}
     function allowance(address _owner, address spender) public view override returns(uint){
         return allowances[_owner][spender];
     }
