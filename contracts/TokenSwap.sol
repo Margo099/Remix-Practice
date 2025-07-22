@@ -42,14 +42,14 @@ contract TokenSwap is ReentrancyGuard {
         ratioAB = _ratio;
         emit SetNewRatio(_ratio);
     }
-    function getRatio() public view onlyAdmin returns (uint) {
+    function getRatio() public view returns (uint) {
         return ratioAB;
     }
     function setFees(uint _fees) public onlyAdmin {
         fees = _fees;
         emit SetNewFees(_fees);
     }
-    function getFees() public view onlyAdmin returns (uint) {
+    function getFees() public view returns (uint) {
         return fees;
     }
 
