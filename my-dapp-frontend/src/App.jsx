@@ -4,8 +4,8 @@ import {
     TOKEN_SWAP_ABI, TOKEN_SWAP_ADDRESS,
     A_TOKEN_ABI, A_TOKEN_ADDRESS,
     B_TOKEN_ABI, B_TOKEN_ADDRESS
-} from './constants/contractABI'; // Убедитесь, что путь правильный
-import './App.css'; // Базовые стили Vite
+} from './constants/contractABI'; 
+import './App.css'; 
 
 function App() {
     // Состояния для подключения кошелька и общих данных
@@ -85,7 +85,7 @@ function App() {
                 setError(null);
 
                 // Получение адреса администратора контракта
-                const adminAddress = await tokenSwapContract.admin({ blockTag: 'latest' }); // Явно указываем 'latest'
+                const adminAddress = await tokenSwapContract.admin({ blockTag: 'latest' }); 
                 setContractAdminAddress(adminAddress);
                 setIsAdmin(userAddress.toLowerCase() === adminAddress.toLowerCase()); // Проверяем, является ли текущий пользователь админом
 
@@ -107,21 +107,21 @@ function App() {
                 }
 
                 // Получение балансов токенов пользователя
-                const balanceA = await aTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const balanceA = await aTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); 
                 setUserBalanceA(ethers.formatUnits(balanceA, await aTokenContract.decimals())); // Форматируем для отображения
-                const balanceB = await bTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const balanceB = await bTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); 
                 setUserBalanceB(ethers.formatUnits(balanceB, await bTokenContract.decimals()));
 
                 // Получение одобрений (allowance) для TokenSwap
-                const allowanceA = await aTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const allowanceA = await aTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); 
                 setATokenAllowance(ethers.formatUnits(allowanceA, await aTokenContract.decimals()));
-                const allowanceB = await bTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const allowanceB = await bTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); 
                 setBTokenAllowance(ethers.formatUnits(allowanceB, await bTokenContract.decimals()));
 
                 // Получение цен токенов (для buyTokens)
-                const priceA = await aTokenContract.tokenPrice({ blockTag: 'latest' }); // Явно указываем 'latest'
+                const priceA = await aTokenContract.tokenPrice({ blockTag: 'latest' }); 
                 setATokenPrice(ethers.formatUnits(priceA, 'wei')); // Цена в wei
-                const priceB = await bTokenContract.tokenPrice({ blockTag: 'latest' }); // Явно указываем 'latest'
+                const priceB = await bTokenContract.tokenPrice({ blockTag: 'latest' }); 
                 setBTokenPrice(ethers.formatUnits(priceB, 'wei'));
 
             } catch (err) {
@@ -148,7 +148,7 @@ function App() {
     }, [walletConnected, tokenSwapContract, userAddress, aTokenContract, bTokenContract]);
 
 
-    // --- Функции для TokenSwap ---
+    // Функции для TokenSwap
 
     const handleSetRatio = async () => {
         if (tokenSwapContract && newRatioInput) {
@@ -204,7 +204,7 @@ function App() {
                 const tx = await tokenContract.approve(spenderAddress, amountInUnits);
                 await tx.wait();
                 alert(`${tokenName} approved successfully for ${amount} units!`);
-                fetchContractData(); // Обновить данные
+                fetchContractData(); // Обновилть данные
             } catch (err) {
                 console.error(`Error approving ${tokenName}:`, err);
                 setError(`Failed to approve ${tokenName}. Check console.`);
@@ -251,7 +251,7 @@ function App() {
                 await tx.wait();
                 alert(`Swapped ${amountToSwapB} BToken for AToken successfully!`);
                 setAmountToSwapB('');
-                fetchContractData(); // Обновить данные
+                fetchContractData(); // Обновить
             } catch (err) {
                 console.error("Error swapping B->A:", err);
                 setError("Failed to swap B->A. Check console. Did you approve enough BToken?");
@@ -270,7 +270,6 @@ function App() {
                 setLoading(true);
                 setError(null);
                 const amountInUnits = ethers.parseUnits(amountToBuyA, await aTokenContract.decimals());
-                // Убедитесь, что aTokenPrice является BigInt перед умножением
                 const ethRequired = ethers.parseUnits(amountToBuyA, 'wei') * BigInt(aTokenPrice); // Total ETH in wei
                 
                 const tx = await aTokenContract.buyTokens(amountInUnits, { value: ethRequired });
@@ -296,8 +295,7 @@ function App() {
                 setLoading(true);
                 setError(null);
                 const amountInUnits = ethers.parseUnits(amountToBuyB, await bTokenContract.decimals());
-                // Убедитесь, что bTokenPrice является BigInt перед умножением
-                const ethRequired = ethers.parseUnits(amountToBuyB, 'wei') * BigInt(bTokenPrice); // Total ETH in wei
+                const ethRequired = ethers.parseUnits(amountToBuyB, 'wei') * BigInt(bTokenPrice); 
 
                 const tx = await bTokenContract.buyTokens(amountInUnits, { value: ethRequired });
                 await tx.wait();

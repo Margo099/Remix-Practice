@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { DONATION_ABI, DONATION_ADDRESS } from './constants/donationlogABI'; // Убедитесь, что путь правильный
+import { DONATION_ABI, DONATION_ADDRESS } from './constants/donationlogABI'; 
 import './App.css'; // Базовые стили Vite
 
 function App() {
@@ -67,7 +67,6 @@ function App() {
 
                 // Получение всех донатов
                 const donationsArray = await donationContract.getAllDonations({ blockTag: 'latest' });
-                // Форматируем донаты для удобного отображения
                 const formattedDonations = donationsArray.map(donation => ({
                     sender: donation.sender,
                     amount: ethers.formatEther(donation.amount), // Преобразуем wei в ETH
