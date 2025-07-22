@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { DONATION_ABI, DONATION_ADDRESS } from './constants/donationlogABI'; 
-import './App.css'; // Базовые стили Vite
+import { ethers } from 'ethers'; // Это Ethers v5
+import { DONATION_ABI, DONATION_ADDRESS } from './constants/donationlogABI';
+import './App.css';
 
 function App() {
     // Состояния для подключения кошелька и общих данных
@@ -16,7 +16,8 @@ function App() {
 
     // Состояния для донатов
     const [donationMessage, setDonationMessage] = useState('');
-    const [donationAmount, setDonationAmount] = useState(''); // Сумма ETH для доната
+    const [donationAmount, setDonationAmount] = useState(''); // <--- ЭТА СТРОКА ОЧЕНЬ ВАЖНА!
+
     const [allDonations, setAllDonations] = useState([]); // Массив для хранения всех донатов
 
     // Состояние для вывода ETH
@@ -29,7 +30,8 @@ function App() {
             try {
                 setLoading(true);
                 setError(null);
-                const provider = new ethers.BrowserProvider(window.ethereum);
+                // Инициализация провайдера для Ethers.js v5
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
                 await provider.send("eth_requestAccounts", []); // Запрос на подключение аккаунта
                 const currentSigner = await provider.getSigner();
                 setSigner(currentSigner);
@@ -60,25 +62,29 @@ function App() {
                 setLoading(true);
                 setError(null);
 
+                // Создаем провайдера только для чтения, если нет MetaMask
+                const readProvider = window.ethereum
+                    ? new ethers.providers.Web3Provider(window.ethereum)
+                    : new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+
                 // Получение адреса владельца контракта
-                const ownerAddress = await donationContract.owner({ blockTag: 'latest' });
+                const ownerAddress = await donationContract.owner();
                 setContractOwnerAddress(ownerAddress);
                 setIsOwner(userAddress.toLowerCase() === ownerAddress.toLowerCase());
 
                 // Получение всех донатов
-                const donationsArray = await donationContract.getAllDonations({ blockTag: 'latest' });
+                const donationsArray = await donationContract.getAllDonations();
                 const formattedDonations = donationsArray.map(donation => ({
                     sender: donation.sender,
-                    amount: ethers.formatEther(donation.amount), // Преобразуем wei в ETH
+                    amount: ethers.utils.formatEther(donation.amount), // Ethers v5: ethers.utils.formatEther
                     message: donation.message,
-                    timestamp: new Date(Number(donation.timestamp) * 1000).toLocaleString() // Преобразуем timestamp в читаемую дату
+                    timestamp: new Date(Number(donation.timestamp) * 1000).toLocaleString()
                 }));
                 setAllDonations(formattedDonations);
 
                 // Получение баланса контракта
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                const balance = await provider.getBalance(DONATION_ADDRESS);
-                setContractBalance(ethers.formatEther(balance)); // Баланс контракта в ETH
+                const balance = await readProvider.getBalance(DONATION_ADDRESS);
+                setContractBalance(ethers.utils.formatEther(balance)); // Ethers v5: ethers.utils.formatEther
 
             } catch (err) {
                 console.error("Error fetching contract data:", err);
@@ -105,13 +111,14 @@ function App() {
 
     // Функция для отправки доната
     const handleDonate = async () => {
+        // Проверка наличия donationAmount и donationMessage
         if (donationContract && donationAmount && donationMessage) {
             try {
                 setLoading(true);
                 setError(null);
-                // Преобразуем сумму ETH из пользовательского ввода в WEI
-                const amountInWei = ethers.parseEther(donationAmount); 
-                
+                // Преобразуем сумму ETH из пользовательского ввода в WEI (Ethers v5: ethers.utils.parseEther)
+                const amountInWei = ethers.utils.parseEther(donationAmount);
+
                 // Вызываем функцию donate, отправляя ETH
                 const tx = await donationContract.donate(donationMessage, { value: amountInWei });
                 await tx.wait(); // Ждем подтверждения транзакции
@@ -136,9 +143,9 @@ function App() {
             try {
                 setLoading(true);
                 setError(null);
-                // Преобразуем сумму ETH для вывода в WEI
-                const amountInWei = ethers.parseEther(withdrawAmount);
-                
+                // Преобразуем сумму ETH для вывода в WEI (Ethers v5: ethers.utils.parseEther)
+                const amountInWei = ethers.utils.parseEther(withdrawAmount);
+
                 const tx = await donationContract.withdrawAll(amountInWei);
                 await tx.wait();
                 alert(`Successfully withdrew ${withdrawAmount} ETH!`);

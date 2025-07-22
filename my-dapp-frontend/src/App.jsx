@@ -203,7 +203,7 @@ function App() {
                 const tx = await tokenContract.approve(spenderAddress, amountInUnits);
                 await tx.wait();
                 alert(`${tokenName} approved successfully for ${amount} units!`);
-                fetchContractData(); // Обновилть данные
+                fetchContractData(); // Обновить данные
             } catch (err) {
                 console.error(`Error approving ${tokenName}:`, err);
                 setError(`Failed to approve ${tokenName}. Check console.`);
@@ -250,7 +250,7 @@ function App() {
                 await tx.wait();
                 alert(`Swapped ${amountToSwapB} BToken for AToken successfully!`);
                 setAmountToSwapB('');
-                fetchContractData(); // Обновить
+                fetchContractData(); // Обновить данные
             } catch (err) {
                 console.error("Error swapping B->A:", err);
                 setError("Failed to swap B->A. Check console. Did you approve enough BToken?");
