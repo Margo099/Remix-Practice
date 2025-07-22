@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { DONATION_ABI, DONATION_ADDRESS } from './constants/donationlogABI'; // Убедитесь, что путь правильный
+import { DONATION_ABI, DONATION_ADDRESS } from './constants/donationlogABI'; 
 import './App.css'; // Базовые стили Vite
 
 function App() {

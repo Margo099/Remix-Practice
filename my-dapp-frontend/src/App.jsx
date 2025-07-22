@@ -4,7 +4,7 @@ import {
     TOKEN_SWAP_ABI, TOKEN_SWAP_ADDRESS,
     A_TOKEN_ABI, A_TOKEN_ADDRESS,
     B_TOKEN_ABI, B_TOKEN_ADDRESS
-} from './constants/contractABI'; // Убедитесь, что путь правильный
+} from './constants/contractABI'; 
 import './App.css'; // Базовые стили Vite
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
 
     // Состояния для данных контракта TokenSwap
     const [ratio, setRatio] = useState('0'); // Инициализируем строкой, чтобы избежать проблем с BigInt/Number
-    const [fees, setFees] = useState('0'); // Инициализируем строкой
+    const [fees, setFees] = useState('0'); 
     const [newRatioInput, setNewRatioInput] = useState('');
     const [newFeesInput, setNewFeesInput] = useState('');
 
@@ -85,13 +85,13 @@ function App() {
                 setError(null);
 
                 // Получение адреса администратора контракта
-                const adminAddress = await tokenSwapContract.admin({ blockTag: 'latest' }); // Явно указываем 'latest'
+                const adminAddress = await tokenSwapContract.admin({ blockTag: 'latest' }); 
                 setContractAdminAddress(adminAddress);
                 setIsAdmin(userAddress.toLowerCase() === adminAddress.toLowerCase()); // Проверяем, является ли текущий пользователь админом
 
                 // Получение Ratio и Fees из TokenSwap
                 try {
-                    const currentRatio = await tokenSwapContract.getRatio({ blockTag: 'latest' }); // Явно указываем 'latest'
+                    const currentRatio = await tokenSwapContract.getRatio({ blockTag: 'latest' }); 
                     setRatio(currentRatio.toString());
                 } catch (err) {
                     console.warn("Could not fetch ratio (might be admin-only or other error):", err.message);
@@ -99,7 +99,7 @@ function App() {
                 }
                 
                 try {
-                    const currentFees = await tokenSwapContract.getFees({ blockTag: 'latest' }); // Явно указываем 'latest'
+                    const currentFees = await tokenSwapContract.getFees({ blockTag: 'latest' }); 
                     setFees(currentFees.toString());
                 } catch (err) {
                     console.warn("Could not fetch fees (might be admin-only or other error):", err.message);
@@ -107,21 +107,21 @@ function App() {
                 }
 
                 // Получение балансов токенов пользователя
-                const balanceA = await aTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const balanceA = await aTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); 
                 setUserBalanceA(ethers.formatUnits(balanceA, await aTokenContract.decimals())); // Форматируем для отображения
-                const balanceB = await bTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const balanceB = await bTokenContract.balanceOf(userAddress, { blockTag: 'latest' }); 
                 setUserBalanceB(ethers.formatUnits(balanceB, await bTokenContract.decimals()));
 
                 // Получение одобрений (allowance) для TokenSwap
-                const allowanceA = await aTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const allowanceA = await aTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); 
                 setATokenAllowance(ethers.formatUnits(allowanceA, await aTokenContract.decimals()));
-                const allowanceB = await bTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); // Явно указываем 'latest'
+                const allowanceB = await bTokenContract.allowance(userAddress, TOKEN_SWAP_ADDRESS, { blockTag: 'latest' }); 
                 setBTokenAllowance(ethers.formatUnits(allowanceB, await bTokenContract.decimals()));
 
                 // Получение цен токенов (для buyTokens)
-                const priceA = await aTokenContract.tokenPrice({ blockTag: 'latest' }); // Явно указываем 'latest'
+                const priceA = await aTokenContract.tokenPrice({ blockTag: 'latest' }); 
                 setATokenPrice(ethers.formatUnits(priceA, 'wei')); // Цена в wei
-                const priceB = await bTokenContract.tokenPrice({ blockTag: 'latest' }); // Явно указываем 'latest'
+                const priceB = await bTokenContract.tokenPrice({ blockTag: 'latest' }); 
                 setBTokenPrice(ethers.formatUnits(priceB, 'wei'));
 
             } catch (err) {
@@ -148,7 +148,7 @@ function App() {
     }, [walletConnected, tokenSwapContract, userAddress, aTokenContract, bTokenContract]);
 
 
-    // --- Функции для TokenSwap ---
+    // Функции для TokenSwap 
 
     const handleSetRatio = async () => {
         if (tokenSwapContract && newRatioInput) {
@@ -198,7 +198,6 @@ function App() {
             try {
                 setLoading(true);
                 setError(null);
-                // amount должен быть в базовых единицах (например, WEI для ETH, или 10^18 для ERC20)
                 // Используем ethers.parseUnits для преобразования из десятичного в базовые единицы
                 const amountInUnits = ethers.parseUnits(amount, await tokenContract.decimals());
                 const tx = await tokenContract.approve(spenderAddress, amountInUnits);
@@ -270,7 +269,6 @@ function App() {
                 setLoading(true);
                 setError(null);
                 const amountInUnits = ethers.parseUnits(amountToBuyA, await aTokenContract.decimals());
-                // Убедитесь, что aTokenPrice является BigInt перед умножением
                 const ethRequired = ethers.parseUnits(amountToBuyA, 'wei') * BigInt(aTokenPrice); // Total ETH in wei
                 
                 const tx = await aTokenContract.buyTokens(amountInUnits, { value: ethRequired });
@@ -296,7 +294,6 @@ function App() {
                 setLoading(true);
                 setError(null);
                 const amountInUnits = ethers.parseUnits(amountToBuyB, await bTokenContract.decimals());
-                // Убедитесь, что bTokenPrice является BigInt перед умножением
                 const ethRequired = ethers.parseUnits(amountToBuyB, 'wei') * BigInt(bTokenPrice); // Total ETH in wei
 
                 const tx = await bTokenContract.buyTokens(amountInUnits, { value: ethRequired });
