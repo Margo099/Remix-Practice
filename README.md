@@ -23,7 +23,7 @@
 
 ### 🧱 Блокчейн и Смарт-контракты
 - **Solidity**: 0.8.x, Hardhat, Remix IDE, VS Code
-- **Фреймворки и Библиотеки**: OpenZeppelin (ERC-20, Ownable, ReentrancyGuard, SafeMath)  
+- **Фреймворки и Библиотеки**: OpenZeppelin (ERC-20, Ownable, ReentrancyGuard, SafeMath), Vite  
 - **Тестирование**: Mocha, Chai, Solidity-coverage (высокое покрытие кода)  
 - **Инструменты**: Ethers.js (базово), MetaMask  
 - **Безопасность**: `require()`, `modifier`, `ReentrancyGuard`, `view/pure`, `calldata`  
