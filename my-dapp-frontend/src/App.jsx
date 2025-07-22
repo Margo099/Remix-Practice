@@ -5,7 +5,7 @@ import {
     A_TOKEN_ABI, A_TOKEN_ADDRESS,
     B_TOKEN_ABI, B_TOKEN_ADDRESS
 } from './constants/contractABI'; 
-import './App.css'; 
+import './App.css'; // Базовые стили Vite
 
 function App() {
     // Состояния для подключения кошелька и общих данных
@@ -22,7 +22,7 @@ function App() {
 
     // Состояния для данных контракта TokenSwap
     const [ratio, setRatio] = useState('0'); // Инициализируем строкой, чтобы избежать проблем с BigInt/Number
-    const [fees, setFees] = useState('0'); // Инициализируем строкой
+    const [fees, setFees] = useState('0'); 
     const [newRatioInput, setNewRatioInput] = useState('');
     const [newFeesInput, setNewFeesInput] = useState('');
 
@@ -91,7 +91,7 @@ function App() {
 
                 // Получение Ratio и Fees из TokenSwap
                 try {
-                    const currentRatio = await tokenSwapContract.getRatio({ blockTag: 'latest' }); // Явно указываем 'latest'
+                    const currentRatio = await tokenSwapContract.getRatio({ blockTag: 'latest' }); 
                     setRatio(currentRatio.toString());
                 } catch (err) {
                     console.warn("Could not fetch ratio (might be admin-only or other error):", err.message);
@@ -99,7 +99,7 @@ function App() {
                 }
                 
                 try {
-                    const currentFees = await tokenSwapContract.getFees({ blockTag: 'latest' }); // Явно указываем 'latest'
+                    const currentFees = await tokenSwapContract.getFees({ blockTag: 'latest' }); 
                     setFees(currentFees.toString());
                 } catch (err) {
                     console.warn("Could not fetch fees (might be admin-only or other error):", err.message);
@@ -148,7 +148,7 @@ function App() {
     }, [walletConnected, tokenSwapContract, userAddress, aTokenContract, bTokenContract]);
 
 
-    // Функции для TokenSwap
+    // Функции для TokenSwap 
 
     const handleSetRatio = async () => {
         if (tokenSwapContract && newRatioInput) {
@@ -198,7 +198,6 @@ function App() {
             try {
                 setLoading(true);
                 setError(null);
-                // amount должен быть в базовых единицах (например, WEI для ETH, или 10^18 для ERC20)
                 // Используем ethers.parseUnits для преобразования из десятичного в базовые единицы
                 const amountInUnits = ethers.parseUnits(amount, await tokenContract.decimals());
                 const tx = await tokenContract.approve(spenderAddress, amountInUnits);
@@ -295,7 +294,7 @@ function App() {
                 setLoading(true);
                 setError(null);
                 const amountInUnits = ethers.parseUnits(amountToBuyB, await bTokenContract.decimals());
-                const ethRequired = ethers.parseUnits(amountToBuyB, 'wei') * BigInt(bTokenPrice); 
+                const ethRequired = ethers.parseUnits(amountToBuyB, 'wei') * BigInt(bTokenPrice); // Total ETH in wei
 
                 const tx = await bTokenContract.buyTokens(amountInUnits, { value: ethRequired });
                 await tx.wait();

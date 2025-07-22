@@ -3,6 +3,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("solidity-coverage"); 
 
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.29", // версия Solidity
@@ -12,16 +13,15 @@ module.exports = {
     cache: "./cache",
     artifacts: "./artifacts"
   },
-  networks: { // 
+  networks: { 
     hardhat: {
-      // Это конфигурация для локальной Hardhat Network
       mining: {
         auto: false,     // Отключаем майнинг по требованию
         interval: 1000   // Генерировать новый блок каждые 1000 мс (1 секунда)
       }
     },
-    localhost: { // <-- Добавляем localhost, чтобы явно ссылаться на него в скрипте деплоя
-      url: "http://127.0.0.1:8545", 
+    localhost: { //localhost, чтобы явно ссылаться на него в скрипте деплоя
+      url: "http://127.0.0.1:8545", // Адрес, на котором Hardhat Network слушает
       chainId: 31337, // Chain ID для Hardhat Network
       // accounts: [/* если нужно указать конкретные аккаунты для localhost */]
     }
@@ -29,7 +29,7 @@ module.exports = {
   coverage: {
     exclude: [
       "contracts/ProxyLibrary.sol", 
-      "contracts/ILibraryStorage.sol", 
+      "contracts/ILibraryStorage.sol",
     ],
   }
 };
