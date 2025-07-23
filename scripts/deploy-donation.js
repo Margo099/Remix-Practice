@@ -1,42 +1,15 @@
-const hre = require("hardhat");
-
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying from:", deployer.address);
 
-  console.log(
-    "Deploying DonationEventLog contract with the account:",
-    deployer.address
-  );
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  const Donation = await ethers.getContractFactory("DonationEventLog");
+  const contract = await Donation.deploy();
+  await contract.deployed();
 
-  console.log("Deploying DonationEventLog...");
-  const DonationEventLogFactory = await hre.ethers.getContractFactory("DonationEventLog");
-
-  // Запускаем деплой.
-  const donationEventLog = await DonationEventLogFactory.deploy();
-
-  // --- ВАЖНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ ---
-  // Дожидаемся, пока контракт будет полностью развернут и доступен.
-  // Это метод для Ethers.js v5.
-  await donationEventLog.deployed(); 
-
-  // Теперь .address будет доступен после await donationEventLog.deployed()
-  const contractAddress = donationEventLog.address; 
-  // --- КОНЕЦ ВАЖНОГО ИЗМЕНЕНИЯ ---
-
-  if (contractAddress) {
-    console.log("DonationEventLog deployed to:", contractAddress);
-    console.log("\n--- CONTRACT ADDRESS FOR FRONTEND ---");
-    console.log("DonationEventLog Address:", contractAddress);
-    console.log("---------------------------------------");
-  } else {
-    console.error("Failed to retrieve contract address after deployment.");
-  }
+  console.log("DonationEventLog deployed to:", contract.address);
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

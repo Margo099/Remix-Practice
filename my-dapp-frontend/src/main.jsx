@@ -1,10 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import DonationApp from './DonationApp.jsx' // Изменили импорт на ваш новый файл
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <DonationApp /> {/* Рендерим ваш новый компонент */}
-  </React.StrictMode>,
-)
+    <App />
+  </React.StrictMode>
+);

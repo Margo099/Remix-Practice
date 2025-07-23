@@ -42,7 +42,9 @@ contract DonationEventLog {
     function getAllDonations() public view returns (Donation[] memory) {
         return donations;
     }
-
+    function totalDonations() public view returns (uint) {
+        return address(this).balance; 
+    }
     function withdrawAll(uint _amount) public onlyOwner {
         require(_amount > 0, "need ETH");
         require(_amount <= address(this).balance, "wrong amount");
