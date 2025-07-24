@@ -3,36 +3,40 @@ import React, { useEffect, useState, useCallback } from 'react';
 import TokenSwapForm from './TokenSwap/TokenSwapForm';
 import TokenSwapAdminPanel from './TokenSwap/TokenSwapAdminPanel';
 import TokenStatus from './TokenSwap/TokenStatus';
-// Импортируем getSigner и getProvider, но не initProvider и requestAccounts
-import { getSigner, getProvider, initProvider, requestAccounts } from './web3'; // Убедись, что все импортировано
+import { getSigner, getProvider, initProvider, requestAccounts } from './web3'; 
 import './App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('tokenswap');
   const [account, setAccount] = useState(null);
-  const [signer, setSigner] = useState(null); // <-- НОВОЕ СОСТОЯНИЕ ДЛЯ SIGNER
+  const [signer, setSigner] = useState(null);
+  const [web3Provider, setWeb3Provider] = useState(null); // Состояние для объекта ethers.providers.Web3Provider
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [statusRefreshCounter, setStatusRefreshCounter] = useState(0); // Счетчик для принудительного обновления статуса
 
   const connectWallet = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      await initProvider(); // Инициализируем провайдера
-      const accounts = await requestAccounts(); // Запрашиваем аккаунты
+      await initProvider(); // Инициализируем глобальный провайдер в web3.js
+      const accounts = await requestAccounts(); // Запрашиваем аккаунты у MetaMask
       if (accounts && accounts.length > 0) {
         setAccount(accounts[0]);
-        const currentSigner = getSigner(); // <-- ПОЛУЧАЕМ SIGNER ПОСЛЕ ПОДКЛЮЧЕНИЯ
-        setSigner(currentSigner);         // <-- СОХРАНЯЕМ SIGNER В СОСТОЯНИИ
+        const currentSigner = getSigner();
+        setSigner(currentSigner);
+        setWeb3Provider(getProvider()); // Сохраняем экземпляр провайдера
       } else {
         setAccount(null);
-        setSigner(null); // Сбрасываем signer, если аккаунты не найдены
+        setSigner(null);
+        setWeb3Provider(null);
         setError("No accounts found or permission denied.");
       }
     } catch (err) {
       console.error("Failed to connect wallet:", err);
       setAccount(null);
-      setSigner(null); // Сбрасываем signer при ошибке
+      setSigner(null);
+      setWeb3Provider(null);
       if (err.code === 4001) {
         setError("Connection rejected by user.");
       } else if (err.message.includes("already pending") || err.code === -32002) {
@@ -51,20 +55,23 @@ function App() {
       setError(null);
       try {
         await initProvider();
-        const providerInstance = getProvider(); // Использовать getProvider()
+        const providerInstance = getProvider(); 
+        setWeb3Provider(providerInstance); // Сохраняем экземпляр провайдера
+        
         const accounts = await providerInstance.listAccounts(); 
         if (accounts && accounts.length > 0) {
           setAccount(accounts[0]);
-          const currentSigner = getSigner(); // <-- ПОЛУЧАЕМ SIGNER
-          setSigner(currentSigner);         // <-- СОХРАНЯЕМ SIGNER
+          const currentSigner = getSigner();
+          setSigner(currentSigner);
         } else {
           setAccount(null);
-          setSigner(null); // Сбрасываем signer
+          setSigner(null);
         }
       } catch (err) {
-        console.warn("No active MetaMask connection found on load:", err);
+        console.warn("No active MetaMask connection found on load or provider init failed:", err);
         setAccount(null);
-        setSigner(null); // Сбрасываем signer при ошибке
+        setSigner(null);
+        setWeb3Provider(null);
       } finally {
         setLoading(false);
       }
@@ -72,17 +79,18 @@ function App() {
 
     checkConnection();
 
-    // Слушатели для изменения аккаунтов и сети
     if (window.ethereum) {
       const handleAccountsChanged = (accounts) => {
         if (accounts.length > 0) {
           setAccount(accounts[0]);
-          setSigner(getSigner()); // Обновляем signer при смене аккаунта
+          setSigner(getSigner());
           setError(null);
+          setStatusRefreshCounter(prev => prev + 1); // Обновляем счетчик при смене аккаунта
         } else {
           setAccount(null);
-          setSigner(null); // Сбрасываем signer
+          setSigner(null);
           setError("Wallet disconnected. Please connect again.");
+          setStatusRefreshCounter(prev => prev + 1); // Обновляем счетчик при отключении
         }
       };
 
@@ -101,6 +109,19 @@ function App() {
     }
   }, []);
 
+  // Функция для обновления счетчика, которую будем передавать дочерним компонентам
+  const refreshStatus = useCallback(() => {
+    setStatusRefreshCounter(prev => prev + 1);
+  }, []);
+
+  // Вспомогательная функция для форматирования адреса
+  const formatAddress = (address) => {
+    if (!address || typeof address !== 'string' || address.length < 10) {
+      return address || 'N/A'; 
+    }
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
+
   return (
     <div className="app-container">
       <div className="app-box">
@@ -109,18 +130,18 @@ function App() {
         {loading ? (
           <p>⏳ Loading Web3...</p>
         ) : account ? (
-          <p>✅ Connected: {account}</p>
+          <p>✅ Connected: {formatAddress(account)}</p>
         ) : (
           <div>
             <p>🛑 Not connected</p>
-            {error && <p className="error-message">⚠️ {error}</p>}
-            <button className="connect-button" onClick={connectWallet}>
+            {error && <p className="status-message error-message">⚠️ {error}</p>}
+            <button className="connect-button" onClick={connectWallet} disabled={loading}>
               Connect Wallet
             </button>
           </div>
         )}
 
-        {account && signer && ( // Показываем вкладки и контент только если подключен аккаунт И есть signer
+        {account && signer && web3Provider && ( // Рендерим вкладки и контент только если все готово
           <>
             <div className="tabs">
               <button
@@ -129,15 +150,29 @@ function App() {
               >
                 🔁 Token Swap
               </button>
+              {/* Добавь другие вкладки, если они есть */}
             </div>
 
             <div className="tab-content">
               {activeTab === 'tokenswap' && (
                 <div>
-                  {/* ПЕРЕДАЕМ SIGNER И ACCOUNT КАК ПРОПСЫ */}
-                  <TokenSwapForm signer={signer} account={account} />
-                  <TokenStatus signer={signer} account={account} />
-                  <TokenSwapAdminPanel signer={signer} account={account} />
+                  {/* Передаем signer, account, web3Provider и refreshStatus */}
+                  <TokenSwapForm 
+                    signer={signer} 
+                    account={account} 
+                    web3Provider={web3Provider} 
+                    refreshStatus={refreshStatus} 
+                  />
+                  <TokenStatus 
+                    provider={web3Provider} 
+                    account={account} 
+                    statusRefreshCounter={statusRefreshCounter} 
+                  />
+                  <TokenSwapAdminPanel 
+                    signer={signer} 
+                    account={account} 
+                    refreshStatus={refreshStatus} 
+                  />
                 </div>
               )}
             </div>

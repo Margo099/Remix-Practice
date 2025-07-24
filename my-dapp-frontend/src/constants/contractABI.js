@@ -1824,10 +1824,72 @@ export const bTokenAbi = [
   // Минимальный ABI для ERC20 approve/allowance (если надо отдельно)
 export const erc20MinimalAbi = [
   "function approve(address spender, uint256 amount) external returns (bool)",
-  "function allowance(address owner, address spender) external view returns (uint256)"
+  "function allowance(address owner, address spender) external view returns (uint256)",
+  // Добавьте эту строку для функции tokenPrice:
+  {
+    "inputs": [],
+    "name": "tokenPrice",
+    "outputs": [
+      {
+        "internalType": "uint256", // Или address, в зависимости от типа, который возвращает ваш tokenPrice
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view", // Это 'view' функция, так как она только читает состояние
+    "type": "function"
+  },
+  // Если у вас были другие функции, такие как name(), symbol(), decimals(),
+  // которые вы использовали, их тоже нужно добавить, например:
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "numberOfTokens", "type": "uint256"}
+    ],
+    "name": "buyTokens",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "address", "name": "_tokenSwapAddress", "type": "address"}
+    ],
+    "name": "setTokenSwapAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
 ];
 
 // --- Адреса контрактов (замените на те, что вы получили при деплое) ---
-export const tokenSwapAddress = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
-export const aTokenAddress = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
-export const bTokenAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
+export const tokenSwapAddress = "0x0355B7B8cb128fA5692729Ab3AAa199C1753f726";
+export const aTokenAddress = "0x36b58F5C1969B7b6591D752ea6F5486D069010AB";
+export const bTokenAddress = "0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7";

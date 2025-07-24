@@ -1,36 +1,33 @@
 // src/TokenSwap/TokenStatus.jsx
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { tokenSwapAddress, tokenSwapAbi } from '../constants/contractABI';
-import { getTokenSwapContract, getProvider } from '../web3'; // <-- ИЗМЕНЕНО
+import { getTokenSwapContract } from '../web3'; // Убрали getProvider отсюда
 
-// Этот компонент может принимать provider напрямую, или получать его через getProvider()
-// Если ты передаешь signer/account из App.jsx, можешь передать и provider.
-// Но если он только для чтения, достаточно getProvider()
-const TokenStatus = ({ signer, account }) => { // Принимаем signer/account, чтобы можно было зависеть от них
+// Принимаем provider и statusRefreshCounter
+const TokenStatus = ({ provider, statusRefreshCounter }) => {
   const [ratio, setRatio] = useState(null);
   const [fees, setFees] = useState(null);
-  const [statusMessage, setStatusMessage] = useState(''); // Для сообщений о загрузке/ошибке
+  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
     async function loadStatus() {
+      if (!provider) { // Проверяем, что provider передан
+        setStatusMessage('Waiting for Web3 provider...');
+        setRatio(null);
+        setFees(null);
+        return;
+      }
+      
       setStatusMessage('Loading token status...');
       try {
-        const provider = getProvider(); // Получаем провайдер
-        if (!provider) {
-          setStatusMessage('Error: Web3 provider not available.');
-          return;
-        }
-        
-        // Для чтения данных контракта можно использовать провайдер
-        const contract = getTokenSwapContract(provider); // Инициализируем контракт с provider
+        const contract = getTokenSwapContract(provider); 
         
         const fetchedRatio = await contract.getRatio();
         const fetchedFees = await contract.getFees();
 
-        setRatio(fetchedRatio.toString());
-        setFees(fetchedFees.toString());
-        setStatusMessage(''); // Очищаем сообщение при успехе
+        setRatio(fetchedRatio.toString()); // BigNumber в строку
+        setFees(fetchedFees.toString());   // BigNumber в строку
+        setStatusMessage(''); 
       } catch (e) {
         console.error('Failed to load token status:', e);
         setStatusMessage('Error loading token status. Please connect wallet.');
@@ -40,10 +37,10 @@ const TokenStatus = ({ signer, account }) => { // Принимаем signer/acco
     }
     loadStatus();
 
-    // Опционально: можно обновлять статус при подключении/отключении кошелька
-    // или при смене сети, если это имеет значение для отображения.
-    // Если `account` меняется, то `signer` тоже меняется, и можно было бы триггернуть `loadStatus`.
-  }, [account]); // Зависимость от account. Когда аккаунт подключается, пробуем загрузить статус.
+    // Зависимость от provider И statusRefreshCounter.
+    // Это гарантирует, что статус обновится, когда provider станет доступен,
+    // или когда изменится статус через refreshStatus().
+  }, [provider, statusRefreshCounter]); 
 
   return (
     <div className="token-status">

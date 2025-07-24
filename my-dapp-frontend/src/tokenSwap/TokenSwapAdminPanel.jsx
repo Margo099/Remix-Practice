@@ -1,12 +1,10 @@
 // src/TokenSwap/TokenSwapAdminPanel.jsx
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-// Импортируем только адреса и функции контрактов
-import { tokenSwapAddress, aTokenAddress, bTokenAddress, erc20MinimalAbi } from '../constants/contractABI';
-import { getTokenSwapContract, getATokenContract, getBTokenContract } from '../web3'; // <-- ИЗМЕНЕНО
+import { getTokenSwapContract } from '../web3'; 
 
-// Принимаем signer и account как пропсы
-const TokenSwapAdminPanel = ({ signer, account }) => { // <-- ДОБАВЛЕНО
+// Принимаем signer, account и refreshStatus
+const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
   const [newRatio, setNewRatio] = useState('');
   const [newFees, setNewFees] = useState('');
   const [mintAmount, setMintAmount] = useState('');
@@ -14,7 +12,7 @@ const TokenSwapAdminPanel = ({ signer, account }) => { // <-- ДОБАВЛЕНО
   const [status, setStatus] = useState('');
 
   const handleUpdate = async () => {
-    if (!signer) { // <-- ПРОВЕРКА НА SIGNER
+    if (!signer) {
       setStatus('❌ No signer available. Please connect wallet.');
       return;
     }
@@ -25,21 +23,23 @@ const TokenSwapAdminPanel = ({ signer, account }) => { // <-- ДОБАВЛЕНО
 
     try {
       setStatus('🔄 Updating...');
-      // Контракт инициализируется с переданным signer
       const contract = getTokenSwapContract(signer); 
 
       if (newRatio) {
-        const tx = await contract.setRatio(Number(newRatio));
+        // Убедись, что setRatio принимает uint, а не BigNumber, если ты передаешь просто число.
+        // Если контракту нужен BigNumber, используй ethers.BigNumber.from(newRatio)
+        const tx = await contract.setRatio(Number(newRatio)); 
         await tx.wait();
       }
       if (newFees) {
-        const tx = await contract.setFees(Number(newFees));
+        const tx = await contract.setFees(Number(newFees)); // Аналогично для setFees
         await tx.wait();
       }
 
       setStatus('✅ Updated ratio and fees');
       setNewRatio('');
       setNewFees('');
+      refreshStatus(); // Обновление счетчика для TokenStatus
     } catch (e) {
       console.error(e);
       let errorMessage = '❌ Failed to update';
@@ -51,7 +51,7 @@ const TokenSwapAdminPanel = ({ signer, account }) => { // <-- ДОБАВЛЕНО
   };
 
   const handleMint = async () => {
-    if (!signer) { // <-- ПРОВЕРКА НА SIGNER
+    if (!signer) {
       setStatus('❌ No signer available. Please connect wallet.');
       return;
     }
@@ -62,21 +62,21 @@ const TokenSwapAdminPanel = ({ signer, account }) => { // <-- ДОБАВЛЕНО
 
     try {
       setStatus('🔄 Minting...');
-      // Контракты инициализируются с переданным signer
-      const tokenSwapContract = getTokenSwapContract(signer); // Используем TokenSwap для вызова mintATokensToTokenSwap
+      const tokenSwapContract = getTokenSwapContract(signer); 
       
-      const parsedAmount = ethers.utils.parseUnits(mintAmount, 18);
+      const parsedAmount = ethers.utils.parseUnits(mintAmount, 18); // Минтим с 18 десятичными знаками
 
       let tx;
       if (mintToken === 'A') {
         tx = await tokenSwapContract.mintATokensToTokenSwap(parsedAmount);
-      } else { // mintToken === 'B'
+      } else { 
         tx = await tokenSwapContract.mintBTokensToTokenSwap(parsedAmount);
       }
 
       await tx.wait();
       setStatus(`✅ Minted ${mintAmount} Token${mintToken}`);
       setMintAmount('');
+      refreshStatus(); // Обновление счетчика для TokenStatus
     } catch (e) {
       console.error(e);
       let errorMessage = '❌ Minting failed';
@@ -120,8 +120,8 @@ const TokenSwapAdminPanel = ({ signer, account }) => { // <-- ДОБАВЛЕНО
         <input
           type="number"
           value={mintAmount}
-          placeholder="Amount to Mint"
           onChange={e => setMintAmount(e.target.value)}
+          placeholder="Amount to Mint"
           disabled={!signer}
         />
         <button onClick={handleMint} disabled={!signer}>Mint</button>
