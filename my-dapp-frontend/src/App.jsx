@@ -10,70 +10,97 @@ function App() {
   const [activeTab, setActiveTab] = useState('tokenswap');
   const [account, setAccount] = useState(null);
   const [signer, setSigner] = useState(null);
-  const [web3Provider, setWeb3Provider] = useState(null); // Состояние для объекта ethers.providers.Web3Provider
-  const [loading, setLoading] = useState(true);
+  const [web3Provider, setWeb3Provider] = useState(null); 
+  const [loading, setLoading] = useState(true); // Состояние для первоначальной загрузки App
   const [error, setError] = useState(null);
-  const [statusRefreshCounter, setStatusRefreshCounter] = useState(0); // Счетчик для принудительного обновления статуса
+  const [statusRefreshCounter, setStatusRefreshCounter] = useState(0); 
+
+  // НОВЫЕ СОСТОЯНИЯ ДЛЯ ГЛОБАЛЬНОЙ ЗАГРУЗКИ И СООБЩЕНИЙ
+  const [globalLoading, setGlobalLoading] = useState(false); // Инициализировано как false
+  const [globalStatusMessage, setGlobalStatusMessage] = useState(''); 
+
 
   const connectWallet = useCallback(async () => {
-    setLoading(true);
+    setGlobalLoading(true); // Активируем глобальный оверлей
+    setGlobalStatusMessage('Подключение к кошельку...');
     setError(null);
     try {
-      await initProvider(); // Инициализируем глобальный провайдер в web3.js
-      const accounts = await requestAccounts(); // Запрашиваем аккаунты у MetaMask
+      await initProvider(); 
+      const accounts = await requestAccounts(); 
       if (accounts && accounts.length > 0) {
         setAccount(accounts[0]);
         const currentSigner = getSigner();
         setSigner(currentSigner);
-        setWeb3Provider(getProvider()); // Сохраняем экземпляр провайдера
+        setWeb3Provider(getProvider()); 
+        setGlobalStatusMessage('Кошелек успешно подключен!'); 
       } else {
         setAccount(null);
         setSigner(null);
         setWeb3Provider(null);
-        setError("No accounts found or permission denied.");
+        setError("Аккаунты не найдены или доступ запрещен.");
+        setGlobalStatusMessage(''); 
       }
     } catch (err) {
-      console.error("Failed to connect wallet:", err);
+      console.error("Не удалось подключить кошелек:", err);
       setAccount(null);
       setSigner(null);
       setWeb3Provider(null);
+      let errorMessage = "Ошибка подключения кошелька: ";
       if (err.code === 4001) {
-        setError("Connection rejected by user.");
+        errorMessage += "Пользователь отклонил подключение.";
       } else if (err.message.includes("already pending") || err.code === -32002) {
-        setError("MetaMask request already pending. Please check your MetaMask window.");
+        errorMessage += "Запрос MetaMask уже в ожидании. Проверьте окно MetaMask.";
       } else {
-        setError("Error connecting to wallet: " + (err.message || err.toString()));
+        errorMessage += (err.message || err.toString());
       }
+      setError(errorMessage);
+      setGlobalStatusMessage(''); 
     } finally {
-      setLoading(false);
+      // Задержка перед скрытием оверлея, чтобы пользователь успел прочитать сообщение
+      // Если globalLoading был активирован, то здесь он деактивируется.
+      // Если же это была только первоначальная загрузка, то она тоже завершается.
+      setTimeout(() => {
+        setGlobalLoading(false); 
+        setLoading(false); 
+      }, 1000); 
     }
   }, []);
 
   useEffect(() => {
     async function checkConnection() {
       setLoading(true);
+      setGlobalLoading(true); // Активируем глобальный оверлей при проверке
+      setGlobalStatusMessage('Проверка подключения...');
       setError(null);
       try {
         await initProvider();
         const providerInstance = getProvider(); 
-        setWeb3Provider(providerInstance); // Сохраняем экземпляр провайдера
+        setWeb3Provider(providerInstance); 
         
         const accounts = await providerInstance.listAccounts(); 
         if (accounts && accounts.length > 0) {
           setAccount(accounts[0]);
           const currentSigner = getSigner();
           setSigner(currentSigner);
+          setGlobalStatusMessage('Подключение найдено.');
         } else {
           setAccount(null);
           setSigner(null);
+          setWeb3Provider(null);
+          setGlobalStatusMessage('Кошелек не подключен.');
         }
       } catch (err) {
-        console.warn("No active MetaMask connection found on load or provider init failed:", err);
+        console.warn("Активное подключение MetaMask не найдено или инициализация провайдера не удалась:", err);
         setAccount(null);
         setSigner(null);
         setWeb3Provider(null);
+        setGlobalStatusMessage('Не удалось проверить подключение.');
       } finally {
-        setLoading(false);
+        // Задержка перед скрытием оверлея, чтобы пользователь успел прочитать сообщение
+        setTimeout(() => {
+          setGlobalLoading(false); 
+          setLoading(false); 
+        }, 1000); 
       }
     }
 
@@ -85,17 +112,17 @@ function App() {
           setAccount(accounts[0]);
           setSigner(getSigner());
           setError(null);
-          setStatusRefreshCounter(prev => prev + 1); // Обновляем счетчик при смене аккаунта
+          setStatusRefreshCounter(prev => prev + 1); 
         } else {
           setAccount(null);
           setSigner(null);
-          setError("Wallet disconnected. Please connect again.");
-          setStatusRefreshCounter(prev => prev + 1); // Обновляем счетчик при отключении
+          setError("Кошелек отключен. Подключитесь снова.");
+          setStatusRefreshCounter(prev => prev + 1); 
         }
       };
 
       const handleChainChanged = (chainId) => {
-        console.log("Chain changed to:", chainId);
+        console.log("Сеть изменена на:", chainId);
         window.location.reload(); 
       };
 
@@ -109,12 +136,10 @@ function App() {
     }
   }, []);
 
-  // Функция для обновления счетчика, которую будем передавать дочерним компонентам
   const refreshStatus = useCallback(() => {
     setStatusRefreshCounter(prev => prev + 1);
   }, []);
 
-  // Вспомогательная функция для форматирования адреса
   const formatAddress = (address) => {
     if (!address || typeof address !== 'string' || address.length < 10) {
       return address || 'N/A'; 
@@ -125,43 +150,56 @@ function App() {
   return (
     <div className="app-container">
       <div className="app-box">
+        {/* ГЛОБАЛЬНЫЙ ОВЕРЛЕЙ ЗАГРУЗКИ */}
+        {/* Показывается, когда loading (первоначальная загрузка App) или globalLoading (операции) активны */}
+        <div className={`loading-overlay ${loading || globalLoading ? 'active' : ''}`}>
+          <div className="loader"></div>
+          <p>{globalStatusMessage || 'Загрузка...'}</p> 
+        </div>
+
         <h1 className="app-title">DApp Interface</h1>
 
-        {loading ? (
-          <p>⏳ Loading Web3...</p>
-        ) : account ? (
-          <p>✅ Connected: {formatAddress(account)}</p>
+        {/* Условие для отображения подключения кошелька или статуса */}
+        {account ? (
+          <p>✅ Подключено: {formatAddress(account)}</p>
         ) : (
           <div>
-            <p>🛑 Not connected</p>
+            <p>🛑 Не подключено</p>
             {error && <p className="status-message error-message">⚠️ {error}</p>}
-            <button className="connect-button" onClick={connectWallet} disabled={loading}>
-              Connect Wallet
+            <button 
+              className={`connect-button ${globalLoading ? 'loading' : ''}`} 
+              onClick={connectWallet} 
+              disabled={globalLoading}
+            >
+              <span className={globalLoading ? 'hidden' : ''}>Подключить Кошелек</span>
+              <div className="loader"></div> 
             </button>
           </div>
         )}
 
-        {account && signer && web3Provider && ( // Рендерим вкладки и контент только если все готово
+        {/* Рендерим вкладки и контент только если кошелек подключен и не идет глобальная загрузка */}
+        {account && signer && web3Provider && !loading && ( 
           <>
             <div className="tabs">
               <button
                 className={`tab-button ${activeTab === 'tokenswap' ? 'active' : ''}`}
                 onClick={() => setActiveTab('tokenswap')}
               >
-                🔁 Token Swap
+                🔁 Обмен Токенов
               </button>
-              {/* Добавь другие вкладки, если они есть */}
+              {/* Добавить другие вкладки, если они есть (оставила опициональным)  */}
             </div>
 
             <div className="tab-content">
               {activeTab === 'tokenswap' && (
                 <div>
-                  {/* Передаем signer, account, web3Provider и refreshStatus */}
                   <TokenSwapForm 
                     signer={signer} 
                     account={account} 
                     web3Provider={web3Provider} 
                     refreshStatus={refreshStatus} 
+                    setGlobalLoading={setGlobalLoading}
+                    setGlobalStatusMessage={setGlobalStatusMessage}
                   />
                   <TokenStatus 
                     provider={web3Provider} 
@@ -172,6 +210,8 @@ function App() {
                     signer={signer} 
                     account={account} 
                     refreshStatus={refreshStatus} 
+                    setGlobalLoading={setGlobalLoading}
+                    setGlobalStatusMessage={setGlobalStatusMessage}
                   />
                 </div>
               )}

@@ -1890,6 +1890,6 @@ export const erc20MinimalAbi = [
 ];
 
 //Адреса контрактов
-export const tokenSwapAddress = "0xA7c59f010700930003b33aB25a7a0679C860f29c";
-export const aTokenAddress = "0x07882Ae1ecB7429a84f1D53048d35c4bB2056877";
-export const bTokenAddress = "0x22753E4264FDDc6181dc7cce468904A80a363E44";
+export const tokenSwapAddress = "0xAD523115cd35a8d4E60B3C0953E0E0ac10418309";
+export const aTokenAddress = "0xB06c856C8eaBd1d8321b687E188204C1018BC4E5";
+export const bTokenAddress = "0xaB7B4c595d3cE8C85e16DA86630f2fc223B05057";

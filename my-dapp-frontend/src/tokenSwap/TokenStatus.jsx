@@ -44,10 +44,11 @@ const TokenStatus = ({ provider, statusRefreshCounter }) => {
 
   return (
     <div className="token-status">
-      <h3>🔁 Token Swap Status</h3>
+      {/* Добавляем иконку и улучшаем заголовок */}
+      <h3>✨ Статус Обмена Токенов</h3>
       {statusMessage && <p className="status-message">{statusMessage}</p>}
-      <p>💱 Ratio (A → B): {ratio ?? 'N/A'}</p>
-      <p>💸 Fee: {fees ?? 'N/A'}%</p>
+      <p>💱 Соотношение (A → B): {ratio ?? 'N/A'}</p> {/* Bold текст иконки */}
+      <p>💸 Комиссия: {fees ?? 'N/A'}%</p> {/* Bold текст иконки */}
     </div>
   );
 };

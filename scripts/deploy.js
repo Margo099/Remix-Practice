@@ -78,7 +78,7 @@ async function main() {
   console.log(`Transferred ${ethers.utils.formatEther(tokensToTransferForLiquidity)} BToken to TokenSwap for liquidity`);
   console.log(`TokenSwap BToken balance: ${ethers.utils.formatEther(await bToken.balanceOf(tokenSwap.address))}`);
 
-  // --- Установка ratio и fees ---
+  // Установка ratio и fees 
   await tokenSwap.setRatio(2); // 1 A = 2 B
   await tokenSwap.setFees(1);  // 1% комиссия
   console.log("Set ratio and fees in TokenSwap");

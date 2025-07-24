@@ -1,34 +1,38 @@
-// src/TokenSwap/TokenSwapAdminPanel.jsx
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-// Импортируем адреса токенов A и B, чтобы использовать их для withdrawTokens
 import { getTokenSwapContract } from '../web3'; 
 import { aTokenAddress, bTokenAddress } from '../constants/contractABI'; 
 
 
-// Принимаем signer, account и refreshStatus
-const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
+// Принимаем signer, account и refreshStatus, а также setGlobalLoading/setGlobalStatusMessage
+const TokenSwapAdminPanel = ({ signer, account, refreshStatus, setGlobalLoading, setGlobalStatusMessage }) => {
   const [newRatio, setNewRatio] = useState('');
   const [newFees, setNewFees] = useState('');
   const [mintAmount, setMintAmount] = useState('');
   const [mintToken, setMintToken] = useState('A');
-  // const [withdrawEthAmount, setWithdrawEthAmount] = useState(''); // Состояние для вывода ETH
-  const [withdrawTokenAmount, setWithdrawTokenAmount] = useState(''); // Состояние для вывода токенов
-  const [withdrawTokenType, setWithdrawTokenType] = useState('A'); // Состояние для типа токена для вывода
+  const [withdrawTokenAmount, setWithdrawTokenAmount] = useState('');
+  const [withdrawTokenType, setWithdrawTokenType] = useState('A');
   const [status, setStatus] = useState('');
+
+  // НОВЫЕ СОСТОЯНИЯ ДЛЯ ЛОКАЛЬНОЙ ЗАГРУЗКИ ОПЕРАЦИЙ
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false); // Инициализировано как false
+  const [isLoadingMint, setIsLoadingMint] = useState(false);     // Инициализировано как false
+  const [isLoadingWithdraw, setIsLoadingWithdraw] = useState(false); // Инициализировано как false
+
 
   const handleUpdate = async () => {
     if (!signer) {
-      setStatus('❌ No signer available. Please connect wallet.');
+      setStatus('❌ Нет signer. Подключите кошелек.');
       return;
     }
     if (!newRatio && !newFees) {
-      setStatus('❌ Please enter a ratio or fees to update.');
+      setStatus('❌ Введите соотношение или комиссии для обновления.');
       return;
     }
 
+    setIsLoadingUpdate(true); // Начало загрузки
+    setStatus('🔄 Обновление...');
     try {
-      setStatus('🔄 Updating...');
       const contract = getTokenSwapContract(signer); 
 
       if (newRatio) {
@@ -40,32 +44,35 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
         await tx.wait();
       }
 
-      setStatus('✅ Updated ratio and fees');
+      setStatus('✅ Соотношение и комиссии обновлены');
       setNewRatio('');
       setNewFees('');
       refreshStatus(); 
     } catch (e) {
       console.error(e);
-      let errorMessage = '❌ Failed to update';
+      let errorMessage = '❌ Не удалось обновить';
       if (e.reason) { errorMessage += `: ${e.reason}`; }
       else if (e.data && e.data.message) { errorMessage += `: ${e.data.message}`; }
       else if (e.message) { errorMessage += `: ${e.message}`; }
       setStatus(errorMessage);
+    } finally {
+      setIsLoadingUpdate(false); // Конец загрузки
     }
   };
 
   const handleMint = async () => {
     if (!signer) {
-      setStatus('❌ No signer available. Please connect wallet.');
+      setStatus('❌ Нет signer. Подключите кошелек.');
       return;
     }
     if (!mintAmount || isNaN(mintAmount) || parseFloat(mintAmount) <= 0) {
-      setStatus("❌ Please enter a valid amount to mint.");
+      setStatus("❌ Введите действительное количество для выпуска.");
       return;
     }
 
+    setIsLoadingMint(true); // Начало загрузки
+    setStatus('🔄 Выпуск токенов...');
     try {
-      setStatus('🔄 Minting...');
       const tokenSwapContract = getTokenSwapContract(signer); 
       
       const parsedAmount = ethers.utils.parseUnits(mintAmount, 18); 
@@ -78,69 +85,37 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
       }
 
       await tx.wait();
-      setStatus(`✅ Minted ${mintAmount} Token${mintToken}`);
+      setStatus(`✅ Выпущено ${mintAmount} Токен${mintToken}`);
       setMintAmount('');
       refreshStatus(); 
     } catch (e) {
       console.error(e);
-      let errorMessage = '❌ Minting failed';
+      let errorMessage = '❌ Выпуск не удался';
       if (e.reason) { errorMessage += `: ${e.reason}`; }
       else if (e.data && e.data.message) { errorMessage += `: ${e.data.message}`; }
       else if (e.message) { errorMessage += `: ${e.message}`; }
       setStatus(errorMessage);
+    } finally {
+      setIsLoadingMint(false); // Конец загрузки
     }
   };
-
-  //  Функция handleWithdrawETH
-  /*
-  const handleWithdrawETH = async () => {
-    if (!signer) {
-      setStatus('❌ No signer available. Please connect wallet.');
-      return;
-    }
-    if (!withdrawEthAmount || isNaN(withdrawEthAmount) || parseFloat(withdrawEthAmount) <= 0) {
-      setStatus("❌ Please enter a valid amount of ETH to withdraw.");
-      return;
-    }
-
-    try {
-      setStatus('🔄 Withdrawing ETH...');
-      const tokenSwapContract = getTokenSwapContract(signer);
-      
-      const amountWei = ethers.utils.parseEther(withdrawEthAmount);
-
-      const tx = await tokenSwapContract.withdrawETH(amountWei);
-      await tx.wait();
-      
-      setStatus(`✅ Successfully withdrew ${withdrawEthAmount} ETH.`);
-      setWithdrawEthAmount('');
-      refreshStatus(); 
-    } catch (e) {
-      console.error('Withdraw ETH failed:', e);
-      let errorMessage = '❌ Failed to withdraw ETH';
-      if (e.reason) { errorMessage += `: ${e.reason}`; }
-      else if (e.data && e.data.message) { errorMessage += `: ${e.data.message}`; }
-      else if (e.message) { errorMessage += `: ${e.message}`; }
-      setStatus(errorMessage);
-    }
-  };
-  */
 
   const handleWithdrawTokens = async () => {
     if (!signer) {
-      setStatus('❌ No signer available. Please connect wallet.');
+      setStatus('❌ Нет signer. Подключите кошелек.');
       return;
     }
     if (!withdrawTokenAmount || isNaN(withdrawTokenAmount) || parseFloat(withdrawTokenAmount) <= 0) {
-      setStatus("❌ Please enter a valid amount of tokens to withdraw.");
+      setStatus("❌ Введите действительное количество токенов для вывода.");
       return;
     }
 
+    setIsLoadingWithdraw(true); // Начало загрузки
+    setStatus(`🔄 Вывод Токена ${withdrawTokenType}...`);
     try {
-      setStatus(`🔄 Withdrawing Token ${withdrawTokenType}...`);
       const tokenSwapContract = getTokenSwapContract(signer);
       
-      const amountParsed = ethers.utils.parseUnits(withdrawTokenAmount, 18); // Токены с 18 десятичными знаками
+      const amountParsed = ethers.utils.parseUnits(withdrawTokenAmount, 18); 
 
       let tokenAddressToWithdraw;
       if (withdrawTokenType === 'A') {
@@ -152,97 +127,103 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
       const tx = await tokenSwapContract.withdrawTokens(tokenAddressToWithdraw, amountParsed);
       await tx.wait();
       
-      setStatus(`✅ Successfully withdrew ${withdrawTokenAmount} Token ${withdrawTokenType}.`);
+      setStatus(`✅ Успешно выведено ${withdrawTokenAmount} Токен ${withdrawTokenType}.`);
       setWithdrawTokenAmount('');
       refreshStatus(); 
     } catch (e) {
-      console.error(`Withdraw Token ${withdrawTokenType} failed:`, e);
-      let errorMessage = `❌ Failed to withdraw Token ${withdrawTokenType}`;
+      console.error(`Вывод Токена ${withdrawTokenType} не удался:`, e);
+      let errorMessage = `❌ Не удалось вывести Токен ${withdrawTokenType}`;
       if (e.reason) { errorMessage += `: ${e.reason}`; }
       else if (e.data && e.data.message) { errorMessage += `: ${e.data.message}`; }
       else if (e.message) { errorMessage += `: ${e.message}`; }
       setStatus(errorMessage);
+    } finally {
+      setIsLoadingWithdraw(false); // Конец загрузки
     }
   };
 
 
   return (
     <div className="admin-panel" style={{ marginTop: '1rem' }}>
-      <h3>🔐 Admin Panel</h3>
+      <h3>⚙️ Панель Администратора</h3>
 
       {/* Update Ratio & Fees */}
-      <h4>Update Ratio & Fees</h4>
+      <h4>Обновить Коэффициент & Комиссии</h4>
       <div className="input-group">
         <input
           type="number"
           value={newRatio}
-          placeholder="New Ratio"
+          placeholder="Новое Соотношение"
           onChange={e => setNewRatio(e.target.value)}
-          disabled={!signer}
+          disabled={!signer || isLoadingUpdate} /* Отключаем поле во время загрузки */
         />
         <input
           type="number"
           value={newFees}
-          placeholder="New Fees %"
+          placeholder="Новые Комиссии (%)"
           onChange={e => setNewFees(e.target.value)}
-          disabled={!signer}
+          disabled={!signer || isLoadingUpdate} /* Отключаем поле во время загрузки */
         />
-        <button onClick={handleUpdate} disabled={!signer}>Update</button>
+        <button 
+          onClick={handleUpdate} 
+          disabled={!signer || isLoadingUpdate} /* Отключаем кнопку во время загрузки */
+          className={isLoadingUpdate ? 'loading' : ''} /* Добавляем класс 'loading' */
+        >
+          <span className={isLoadingUpdate ? 'hidden' : ''}>Обновить</span>
+          <div className="loader"></div> {/* Спиннер */}
+        </button>
       </div>
 
       <hr />
 
       {/* Mint Tokens to TokenSwap */}
-      <h4>Mint Tokens to TokenSwap</h4>
+      <h4>Выпустить Токены </h4>
       <div className="input-group">
-        <select value={mintToken} onChange={e => setMintToken(e.target.value)} disabled={!signer}>
-          <option value="A">Mint A to Swap</option>
-          <option value="B">Mint B to Swap</option>
+        <select value={mintToken} onChange={e => setMintToken(e.target.value)} disabled={!signer || isLoadingMint}>
+          <option value="A">Выпустить Токен A</option>
+          <option value="B">Выпустить Токен B</option>
         </select>
         <input
           type="number"
           value={mintAmount}
           onChange={e => setMintAmount(e.target.value)}
-          placeholder="Amount to Mint"
-          disabled={!signer}
+          placeholder="Количество для выпуска"
+          disabled={!signer || isLoadingMint} /* Отключаем поле во время загрузки */
         />
-        <button onClick={handleMint} disabled={!signer}>Mint</button>
+        <button 
+          onClick={handleMint} 
+          disabled={!signer || isLoadingMint} /* Отключаем кнопку во время загрузки */
+          className={isLoadingMint ? 'loading' : ''} /* Добавляем класс 'loading' */
+        >
+          <span className={isLoadingMint ? 'hidden' : ''}>Выпустить</span>
+          <div className="loader"></div> {/* Спиннер */}
+        </button>
       </div>
 
       <hr />
-
-      {/*Секция для Withdraw ETH from TokenSwap */}
-      {/*
-      <h4>Withdraw ETH from TokenSwap</h4>
-      <div className="input-group">
-        <input
-          type="number"
-          value={withdrawEthAmount}
-          onChange={e => setWithdrawEthAmount(e.target.value)}
-          placeholder="Amount ETH to Withdraw"
-          disabled={!signer}
-        />
-        <button onClick={handleWithdrawETH} disabled={!signer}>Withdraw ETH</button>
-      </div>
-
-      <hr />
-      */}
 
       {/* Withdraw Tokens from TokenSwap */}
-      <h4>Withdraw Tokens from TokenSwap</h4>
+      <h4>Вывести Токены из контракта</h4>
       <div className="input-group">
-        <select value={withdrawTokenType} onChange={e => setWithdrawTokenType(e.target.value)} disabled={!signer}>
-          <option value="A">Withdraw A</option>
-          <option value="B">Withdraw B</option>
+        <select value={withdrawTokenType} onChange={e => setWithdrawTokenType(e.target.value)} disabled={!signer || isLoadingWithdraw}>
+          <option value="A">Вывести Токен A</option>
+          <option value="B">Вывести Токен B</option>
         </select>
         <input
           type="number"
           value={withdrawTokenAmount}
           onChange={e => setWithdrawTokenAmount(e.target.value)}
-          placeholder="Amount Tokens to Withdraw"
-          disabled={!signer}
+          placeholder="Количество для вывода"
+          disabled={!signer || isLoadingWithdraw} /* Отключаем поле во время загрузки */
         />
-        <button onClick={handleWithdrawTokens} disabled={!signer}>Withdraw Tokens</button>
+        <button 
+          onClick={handleWithdrawTokens} 
+          disabled={!signer || isLoadingWithdraw} /* Отключаем кнопку во время загрузки */
+          className={isLoadingWithdraw ? 'loading' : ''} /* Добавляем класс 'loading' */
+        >
+          <span className={isLoadingWithdraw ? 'hidden' : ''}>Вывести Токены</span>
+          <div className="loader"></div> {/* Спиннер */}
+        </button>
       </div>
 
       {status && <p className="status-message">{status}</p>}
@@ -251,3 +232,4 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
 };
 
 export default TokenSwapAdminPanel;
+
