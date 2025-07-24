@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ethers } from 'ethers';
 // Импортируем адреса токенов A и B, чтобы использовать их для withdrawTokens
 import { getTokenSwapContract } from '../web3'; 
-import { aTokenAddress, bTokenAddress } from '../constants/contractABI'; // Добавлено
+import { aTokenAddress, bTokenAddress } from '../constants/contractABI'; 
 
 
 // Принимаем signer, account и refreshStatus
@@ -12,7 +12,7 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
   const [newFees, setNewFees] = useState('');
   const [mintAmount, setMintAmount] = useState('');
   const [mintToken, setMintToken] = useState('A');
-  // const [withdrawEthAmount, setWithdrawEthAmount] = useState(''); // УДАЛЕНО: Состояние для вывода ETH
+  // const [withdrawEthAmount, setWithdrawEthAmount] = useState(''); // Состояние для вывода ETH
   const [withdrawTokenAmount, setWithdrawTokenAmount] = useState(''); // Состояние для вывода токенов
   const [withdrawTokenType, setWithdrawTokenType] = useState('A'); // Состояние для типа токена для вывода
   const [status, setStatus] = useState('');
@@ -91,7 +91,7 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
     }
   };
 
-  // УДАЛЕНО: Функция handleWithdrawETH
+  //  Функция handleWithdrawETH
   /*
   const handleWithdrawETH = async () => {
     if (!signer) {
@@ -211,7 +211,7 @@ const TokenSwapAdminPanel = ({ signer, account, refreshStatus }) => {
 
       <hr />
 
-      {/* УДАЛЕНО: Секция для Withdraw ETH from TokenSwap */}
+      {/*Секция для Withdraw ETH from TokenSwap */}
       {/*
       <h4>Withdraw ETH from TokenSwap</h4>
       <div className="input-group">

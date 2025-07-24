@@ -294,7 +294,7 @@
     word-break: break-word; /* Для длинных сообщений об ошибках */
 }
 
-.status-message.error-message { /* Если ты используешь такой класс для ошибок */
+.status-message.error-message { 
   background-color: #fef2f2; /* Очень светлый красный */
   color: #e53e3e; /* Красный текст */
   border: 1px solid #feb2b2;

@@ -110,15 +110,13 @@ function mintBTokensToTokenSwap(uint amount) public onlyAdmin {
 function buyTokensAForUser(uint numberOfTokens) public payable { // remove onlyAdmin if for users
     require(numberOfTokens > 0, "Amount must be greater than zero");
     // Вычислить необходимое количество ETH на основе цены токена A
-    // Примечание: предполагается, что tokenAInstance.tokenPrice существует и корректно установлен
+    // предполагается, что tokenAInstance.tokenPrice существует и корректно установлен
     uint ethRequired = tokenAInstance.tokenPrice() * numberOfTokens;
     require(msg.value == ethRequired, "Incorrect ETH amount sent");
 
     // Mint токены A напрямую пользователю
     tokenAInstance.mint(numberOfTokens * (10**tokenAInstance.decimals()), msg.sender);
-    // ETH отправляется на баланс TokenSwap или можно сразу перевести админу
-    // admin.transfer(msg.value); // Если ETH должен идти админу сразу
-    // Или оставить ETH на балансе TokenSwap для последующего вывода админом
+
 }
 function buyTokensBForUser(uint numberOfTokens) public payable {
     require(numberOfTokens > 0, "Amount must be greater than zero");

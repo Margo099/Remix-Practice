@@ -15,7 +15,6 @@ export async function initProvider() {
   if (window.ethereum) {
     provider = new ethers.providers.Web3Provider(window.ethereum);
     // _signer будет получен через getSigner() после запроса аккаунтов.
-    // НЕ ВЫЗЫВАЕМ eth_requestAccounts ЗДЕСЬ!
   } else {
     throw new Error('MetaMask is not installed or not available.');
   }
@@ -56,9 +55,6 @@ export async function requestAccounts() {
     }
 }
 
-// Функции для получения контрактов. Принимают signer ИЛИ provider.
-// Это позволяет использовать их как для чтения (provider), так и для записи (signer).
-// Если signerOrProvider не передан, пытаемся использовать глобальные _signer или provider.
 export function getTokenSwapContract(signerOrProvider) { 
   const currentSignerOrProvider = signerOrProvider || _signer || provider;
   if (!currentSignerOrProvider) {

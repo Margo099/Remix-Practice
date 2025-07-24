@@ -1,7 +1,7 @@
 // src/constants/contractABI.js (или src/contractABI.js)
 
 // --- ABI для TokenSwap ---
-// Скопируйте ABI из my-dapp-backend/artifacts/contracts/TokenSwap.sol/TokenSwap.json
+// ABI из my-dapp-backend/artifacts/contracts/TokenSwap.sol/TokenSwap.json
 export const tokenSwapAbi = [
     {
       "inputs": [
@@ -448,7 +448,7 @@ export const tokenSwapAbi = [
   ];
 
 // --- ABI для AToken (ERC20Base) ---
-// Скопируйте ABI из my-dapp-backend/artifacts/contracts/AToken.sol/AToken.json
+//ABI из my-dapp-backend/artifacts/contracts/AToken.sol/AToken.json
 export const aTokenAbi = [
     {
       "inputs": [
@@ -1135,7 +1135,7 @@ export const aTokenAbi = [
   ];
 
 // --- ABI для BToken (ERC20Base) ---
-// Скопируйте ABI из my-dapp-backend/artifacts/contracts/BToken.sol/BToken.json
+// ABI из my-dapp-backend/artifacts/contracts/BToken.sol/BToken.json
 export const bTokenAbi = [
     {
       "inputs": [
@@ -1889,7 +1889,7 @@ export const erc20MinimalAbi = [
   },
 ];
 
-// --- Адреса контрактов (замените на те, что вы получили при деплое) ---
-export const tokenSwapAddress = "0x0355B7B8cb128fA5692729Ab3AAa199C1753f726";
-export const aTokenAddress = "0x36b58F5C1969B7b6591D752ea6F5486D069010AB";
-export const bTokenAddress = "0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7";
+//Адреса контрактов
+export const tokenSwapAddress = "0xA7c59f010700930003b33aB25a7a0679C860f29c";
+export const aTokenAddress = "0x07882Ae1ecB7429a84f1D53048d35c4bB2056877";
+export const bTokenAddress = "0x22753E4264FDDc6181dc7cce468904A80a363E44";

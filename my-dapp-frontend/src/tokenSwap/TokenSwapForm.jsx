@@ -1,7 +1,7 @@
 // src/TokenSwap/TokenSwapForm.jsx
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { tokenSwapAddress, erc20MinimalAbi } from '../constants/contractABI'; // erc20MinimalAbi все еще нужен для получения tokenPrice
+import { tokenSwapAddress, erc20MinimalAbi } from '../constants/contractABI'; 
 import { getTokenSwapContract, getATokenContract, getBTokenContract } from '../web3';
 
 
@@ -15,11 +15,7 @@ const TokenSwapForm = ({ signer, account, web3Provider, refreshStatus }) => {
   const [tokenPriceB, setTokenPriceB] = useState(null); 
   const [loadingPrices, setLoadingPrices] = useState(false);
 
-  // Этот useEffect будет пытаться загрузить цены токенов, но они не будут отображаться
-  // и не будут использоваться для кнопок, которые мы удаляем.
-  // Можно его и удалить, если эти данные вообще не нужны на этом экране.
-  // Но если вы хотите оставить возможность использования этих данных для других целей (например, отображения информации),
-  // то можно оставить, но тогда он должен быть независим от того, есть ли кнопки.
+
   useEffect(() => {
     async function loadTokenData() {
         if (!web3Provider) { // Используем web3Provider для чтения
@@ -97,11 +93,11 @@ const TokenSwapForm = ({ signer, account, web3Provider, refreshStatus }) => {
     }
   };
 
-  // Функция handleBuyTokens ПОЛНОСТЬЮ УДАЛЕНА ИЗ ЭТОГО КОМПОНЕНТА
+  // Функция handleBuyTokens 
 
   return (
     <div className="swap-form">
-      <h3>🔁 Swap Tokens</h3> {/* Убрал "/ Buy with ETH" из заголовка */}
+      <h3>🔁 Swap Tokens</h3> {/* Buy with ETH" из заголовка */}
       
       <div className="input-group">
         <label>
@@ -125,7 +121,7 @@ const TokenSwapForm = ({ signer, account, web3Provider, refreshStatus }) => {
 
       <div className="button-group">
         <button onClick={handleSwap} disabled={!signer}>Swap</button>
-        {/* Кнопки "Buy A with ETH" и "Buy B with ETH" УДАЛЕНЫ */}
+        {/* Кнопки "Buy A with ETH" и "Buy B with ETH"  */}
       </div>
 
       {status && <p className="status-message">{status}</p>}

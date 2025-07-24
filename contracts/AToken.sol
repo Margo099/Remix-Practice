@@ -14,7 +14,7 @@ contract AToken is ERC20Base {
     tokenPrice = _tokenPrice;
     tokenSwap = _initialMinterAndAdmin;
     _grantRole(MINTER_ROLE, tokenSwap);
-    // ИСПРАВЛЕНИЕ: Минтим начальный запас на адрес самого токен-контракта
+    // Изменение: Минтим начальный запас на адрес самого токен-контракта
     _mint(_initialSupply, address(this)); 
 }
 

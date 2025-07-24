@@ -4,33 +4,33 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with account:", deployer.address);
 
-  // --- Параметры для токенов ---
+  // Параметры для токенов 
   const initialTokenPriceA = ethers.utils.parseEther("0.001"); // Цена 1 AToken = 0.001 ETH (в WEI)
   const initialTokenPriceB = ethers.utils.parseEther("0.002"); // Цена 1 BToken = 0.002 ETH (в WEI)
   // Начальный запас токенов, который будет у самих AToken/BToken для продажи через buyTokens
   const initialSupplyForTokenContract = ethers.utils.parseEther("1000000"); // 1,000,000 токенов (с 18 десятичными знаками)
 
-  // --- Деплой AToken ---
+  // Деплой AToken
   const ATokenFactory = await ethers.getContractFactory("AToken");
-  // Важно: deployer.address теперь является _initialMinterAndAdmin
+  // deployer.address теперь является _initialMinterAndAdmin
   // Он будет иметь DEFAULT_ADMIN_ROLE в AToken и сможет вызвать setTokenSwapAddress.
   const aToken = await ATokenFactory.deploy(deployer.address, initialTokenPriceA, initialSupplyForTokenContract); 
   await aToken.deployed();
   console.log("AToken deployed to:", aToken.address);
 
-  // --- Деплой BToken ---
+  // Деплой BToken
   const BTokenFactory = await ethers.getContractFactory("BToken");
   const bToken = await BTokenFactory.deploy(deployer.address, initialTokenPriceB, initialSupplyForTokenContract); 
   await bToken.deployed();
   console.log("BToken deployed to:", bToken.address);
 
-  // --- Деплой TokenSwap ---
+  // Деплой TokenSwap 
   const TokenSwapFactory = await ethers.getContractFactory("TokenSwap");
   const tokenSwap = await TokenSwapFactory.deploy(aToken.address, bToken.address);
   await tokenSwap.deployed();
   console.log("TokenSwap deployed to:", tokenSwap.address);
 
-  // --- Установка адреса TokenSwap в AToken и BToken и предоставление MINTER_ROLE ---
+  // Установка адреса TokenSwap в AToken и BToken и предоставление MINTER_ROLE
   // Теперь, когда deployer является админом AToken/BToken, он может вызвать эти функции.
   // TokenSwap получит MINTER_ROLE в AToken/BToken.
   await aToken.setTokenSwapAddress(tokenSwap.address);
@@ -38,7 +38,6 @@ async function main() {
   await bToken.setTokenSwapAddress(tokenSwap.address);
   console.log("Set TokenSwap address in BToken (granted MINTER_ROLE to TokenSwap)");
 
-  // --- Пример покупки токенов для deployer'а (для тестирования) ---
   // Здесь мы хотим купить 500 токенов. Контракт `buyTokens` ожидает это число.
   const simpleNumberOfTokensToBuy = 500; 
 
@@ -62,7 +61,7 @@ async function main() {
   console.log(`Deployer BToken balance: ${ethers.utils.formatEther(await bToken.balanceOf(deployer.address))}`);
 
 
-  // --- Перевод токенов от deployer'а в TokenSwap для ликвидности ---
+  // Перевод токенов от deployer'а в TokenSwap для ликвидности 
   // Переводим часть купленных токенов для начальной ликвидности
   const tokensToTransferForLiquidity = ethers.utils.parseEther("200"); // 200 токенов каждого вида для ликвидности
 
@@ -84,23 +83,16 @@ async function main() {
   await tokenSwap.setFees(1);  // 1% комиссия
   console.log("Set ratio and fees in TokenSwap");
 
-  // --- Вывод адресов ---
+  // Вывод адресов 
   console.log("\n--- Update src/constants/contractABI.js with these addresses ---");
   console.log(`export const tokenSwapAddress = "${tokenSwap.address}";`);
   console.log(`export const aTokenAddress = "${aToken.address}";`);
   console.log(`export const bTokenAddress = "${bToken.address}";`);
 
   // Получить ABI (для твоих ERC20 токенов и TokenSwap)
-  // Это нужно, если ты еще не экспортировал их в constants/contractABI.js
   const tokenSwapAbi = (await ethers.getContractFactory("TokenSwap")).interface.format(ethers.utils.FormatTypes.json);
   const aTokenAbi = (await ethers.getContractFactory("AToken")).interface.format(ethers.utils.FormatTypes.json);
   const bTokenAbi = (await ethers.getContractFactory("BToken")).interface.format(ethers.utils.FormatTypes.json);
-
-  // Вы можете записать их в файл, например:
-  // fs.writeFileSync('./src/constants/abis/TokenSwap.json', tokenSwapAbi);
-  // fs.writeFileSync('./src/constants/abis/AToken.json', aTokenAbi);
-  // fs.writeFileSync('./src/constants/abis/BToken.json', bTokenAbi);
-  // А затем импортировать эти JSON-файлы в constants/contractABI.js
 }
 
 main()

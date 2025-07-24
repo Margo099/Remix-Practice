@@ -1,7 +1,7 @@
 // src/TokenSwap/TokenStatus.jsx
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { getTokenSwapContract } from '../web3'; // Убрали getProvider отсюда
+import { getTokenSwapContract } from '../web3'; 
 
 // Принимаем provider и statusRefreshCounter
 const TokenStatus = ({ provider, statusRefreshCounter }) => {
