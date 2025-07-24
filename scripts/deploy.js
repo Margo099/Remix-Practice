@@ -1,75 +1,91 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
+ const [deployer] = await ethers.getSigners();
+console.log("Deploying contracts with account:", deployer.address);
 
-  console.log("Deploying contracts with the account:", deployer.address);
-  console.log("Account balance:", (await deployer.provider.getBalance(deployer.address)).toString());
+// --- Параметры для токенов ---
+  const initialTokenPriceA = ethers.utils.parseEther("0.001");
+  const initialTokenPriceB = ethers.utils.parseEther("0.002");
+  const initialSupplyForTokenContract = ethers.utils.parseEther("1000000"); // Этот запас будет у самих AToken/BToken для продажи
+    const initialSupplyForDeployer = ethers.utils.parseEther("100000"); // Или сколько deployer должен получить изначально
 
-  // --- 1. Деплой AToken ---
-  console.log("\nDeploying AToken...");
-  const ATokenFactory = await hre.ethers.getContractFactory("AToken");
+  // --- Деплой AToken ---
+    // Здесь _initialMinterAndAdmin - это TokenSwap.address, чтобы он мог минтить,
+    // а _initialSupply будет у самого AToken для buyTokens
+  const ATokenFactory = await ethers.getContractFactory("AToken");
+  const aToken = await ATokenFactory.deploy(ethers.constants.AddressZero, initialTokenPriceA, initialSupplyForTokenContract); // Передаем 0-адрес, так как MINTER_ROLE получит TokenSwap позднее
+  await aToken.deployed();
+  console.log("AToken deployed to:", aToken.address);
 
-  const initialMinterAndAdmin = deployer.address;
-  
-  // *** ИЗМЕНЕНИЕ ЗДЕСЬ: Используем BigInt для _tokenPrice ***
-  // Если _tokenPrice в контракте - это просто uint, а не WEI,
-  // то можно задать его как BigInt или Number, если оно не слишком большое
-  // Например, если 1 AToken стоит 1000 единиц чего-то:
-  const tokenAPrice = 1000n; // Используем BigInt (n на конце) для больших целых чисел
+  // --- Деплой BToken ---
+  const BTokenFactory = await ethers.getContractFactory("BToken");
+  const bToken = await BTokenFactory.deploy(ethers.constants.AddressZero, initialTokenPriceB, initialSupplyForTokenContract); // Передаем 0-адрес, так как MINTER_ROLE получит TokenSwap позднее
+  await bToken.deployed();
+  console.log("BToken deployed to:", bToken.address);
 
-  // Если вы все же хотите использовать 0.000001 ETH как цену, то это будет 10^12 WEI.
-  // Возможно, проблема была в том, что parseEther пытался "разрешить" адрес, а не число.
-  // Давайте попробуем явное преобразование в BigInt, если Hardhat не справляется с parseEther.
-  // const tokenAPrice = 1_000_000_000_000n; // 10^12 WEI (0.000001 ETH)
+  // --- Деплой TokenSwap ---
+  const TokenSwapFactory = await ethers.getContractFactory("TokenSwap");
+  const tokenSwap = await TokenSwapFactory.deploy(aToken.address, bToken.address);
+  await tokenSwap.deployed();
+  console.log("TokenSwap deployed to:", tokenSwap.address);
 
-  const aToken = await ATokenFactory.deploy(initialMinterAndAdmin, tokenAPrice);
-  await aToken.waitForDeployment();
-  const aTokenAddress = await aToken.target;
-  console.log("AToken deployed to:", aTokenAddress);
+  // --- Установка адреса TokenSwap в AToken и BToken и предоставление MINTER_ROLE ---
+    // Это теперь делает TokenSwap минтером для этих токенов.
+    // Если ты изначально минтил supply на сам токен-контракт,
+    // то buyTokens будет работать.
+    // Если ты изначально минтил supply на TokenSwap, то эти токены будут для ликвидности.
+    // Определись с моделью. Моя текущая рекомендация: `initialSupplyForTokenContract`
+    // для баланса токена, а для ликвидности свапа — отдельные минтинги или трансферы.
+    
+  await aToken.setTokenSwapAddress(tokenSwap.address);
+  console.log("Set TokenSwap address in AToken (granted MINTER_ROLE to TokenSwap)");
+  await bToken.setTokenSwapAddress(tokenSwap.address);
+  console.log("Set TokenSwap address in BToken (granted MINTER_ROLE to TokenSwap)");
 
-  // --- 2. Деплой BToken ---
-  console.log("\nDeploying BToken...");
-  const BTokenFactory = await hre.ethers.getContractFactory("BToken");
-  
-  // Аналогично для BToken, если у него такой же конструктор
-  const initialBTokenMinterAndAdmin = deployer.address;
-  const tokenBPrice = 2000n; // Пример цены для BToken
+  // --- Покупка токенов через buyTokens для deployer (теперь это должно работать,
+  // т.к. токены будут на балансе AToken/BToken после развертывания) ---
+  const tokensToBuyCount = 500000;
 
-  const bToken = await BTokenFactory.deploy(initialBTokenMinterAndAdmin, tokenBPrice);
-  await bToken.waitForDeployment();
-  const bTokenAddress = await bToken.target;
-  console.log("BToken deployed to:", bTokenAddress);
+  // Покупка AToken
+  const costA = initialTokenPriceA.mul(tokensToBuyCount);
+  await aToken.buyTokens(tokensToBuyCount, { value: costA });
+  console.log(`Bought ${tokensToBuyCount} AToken for deployer`);
 
+  // Покупка BToken
+  const costB = initialTokenPriceB.mul(tokensToBuyCount);
+  await bToken.buyTokens(tokensToBuyCount, { value: costB });
+  console.log(`Bought ${tokensToBuyCount} BToken for deployer`);
 
-  // --- 3. Деплой TokenSwap, используя адреса AToken и BToken ---
-  console.log("\nDeploying TokenSwap...");
-  const TokenSwapFactory = await hre.ethers.getContractFactory("TokenSwap");
-  const tokenSwap = await TokenSwapFactory.deploy(aTokenAddress, bTokenAddress);
-  await tokenSwap.waitForDeployment();
-  const tokenSwapAddress = await tokenSwap.target;
-  console.log("TokenSwap deployed to:", tokenSwapAddress);
+  // --- Перевод токенов от deployer'а в TokenSwap для ликвидности ---
+  const tokensToTransferForLiquidity = ethers.utils.parseEther((tokensToBuyCount / 2).toString()); // Переведем половину купленных токенов
 
-  // --- Дополнительные настройки для TokenSwap ---
-  const initialRatio = 100;
-  const initialFees = 2; // 2%
+    // Одобрение токенов для TokenSwap перед переводом
+    await aToken.approve(tokenSwap.address, tokensToTransferForLiquidity);
+    console.log(`Approved ${ethers.utils.formatEther(tokensToTransferForLiquidity)} AToken for TokenSwap`);
+  await aToken.transfer(tokenSwap.address, tokensToTransferForLiquidity);
+  console.log(`Transferred ${ethers.utils.formatEther(tokensToTransferForLiquidity)} AToken to TokenSwap for liquidity`);
 
-  console.log(`\nSetting initial ratio to ${initialRatio} and fees to ${initialFees}% for TokenSwap...`);
-  await tokenSwap.setRatio(initialRatio);
-  await tokenSwap.setFees(initialFees);
-  console.log("Initial settings applied.");
+    await bToken.approve(tokenSwap.address, tokensToTransferForLiquidity);
+    console.log(`Approved ${ethers.utils.formatEther(tokensToTransferForLiquidity)} BToken for TokenSwap`);
+  await bToken.transfer(tokenSwap.address, tokensToTransferForLiquidity);
+  console.log(`Transferred ${ethers.utils.formatEther(tokensToTransferForLiquidity)} BToken to TokenSwap for liquidity`);
 
-  // --- Важно: Запишите эти адреса для фронтенда ---
-  console.log("\n--- CONTRACT ADDRESSES FOR FRONTEND ---");
-  console.log("AToken Address:", aTokenAddress);
-  console.log("BToken Address:", bTokenAddress);
-  console.log("TokenSwap Address:", tokenSwapAddress);
-  console.log("---------------------------------------");
+  // --- Установка ratio и fees ---
+  await tokenSwap.setRatio(2); // 1 A = 2 B
+  await tokenSwap.setFees(1);  // 1% комиссия
+  console.log("Set ratio and fees in TokenSwap");
+
+  // --- Вывод адресов ---
+  console.log("\n--- Update tokenSwapABIs.js with these addresses ---");
+  console.log(`export const tokenSwapAddress = "${tokenSwap.address}";`);
+  console.log(`export const aTokenAddress = "${aToken.address}";`);
+  console.log(`export const bTokenAddress = "${bToken.address}";`);
 }
 
 main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

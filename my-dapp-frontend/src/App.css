@@ -1,10 +1,14 @@
+/* Основной контейнер React приложения */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  /* Убедимся, что текст в корневом элементе имеет достаточный контраст */
+  color: #333; /* Темно-серый цвет текста по умолчанию */
 }
 
+/* Общие стили для логотипов (возможно, из Vite/React шаблона) */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -15,9 +19,8 @@
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop_shadow(0 0 2em #61dafbaa);
 }
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -26,17 +29,330 @@
     transform: rotate(360deg);
   }
 }
-
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
 .card {
   padding: 2em;
 }
-
 .read-the-docs {
   color: #888;
+}
+
+/* --- Стили для DApp интерфейса --- */
+
+/* Общий фон и центрирование приложения */
+.app-container {
+  min-height: 100vh;
+  background-color: #f0f2f5; /* Очень светлый серый фон */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Выравниваем по верхнему краю, а не по центру, чтобы было место для скролла */
+  padding: 40px 16px; /* Увеличил верхний и нижний паддинг */
+  font-family: 'Inter', sans-serif; /* Более современный шрифт */
+  color: #333; /* Основной цвет текста для всего приложения */
+}
+
+/* Основной белый контейнер (панель) */
+.app-box {
+  background: #ffffff; /* Белый фон */
+  border-radius: 16px; /* Более мягкие углы */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1); /* Более выраженная тень */
+  max-width: 900px;
+  width: 100%;
+  padding: 40px; /* Увеличенный паддинг внутри блока */
+  box-sizing: border-box;
+  margin-top: 20px; /* Отступ сверху, если align-items: flex-start */
+}
+
+/* Заголовок приложения */
+.app-title {
+  font-size: 2.8rem; /* Чуть крупнее */
+  font-weight: 700; /* Жирный */
+  text-align: center;
+  color: #1a202c; /* Более темный, почти черный цвет */
+  margin-bottom: 30px;
+  letter-spacing: -0.02em; /* Немного уменьшим расстояние между буквами */
+}
+
+/* Состояние подключения кошелька */
+.app-box p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #4a5568; /* Серый цвет для текста статуса */
+}
+.app-box p span {
+  font-weight: 700;
+  color: #2b6cb0; /* Синий для адреса, если он есть */
+}
+.app-box p.error-message {
+  color: #e53e3e; /* Красный для ошибок */
+  font-weight: 600;
+}
+
+/* Кнопка "Connect Wallet" */
+.connect-button {
+  background-color: #4299e1; /* Яркий синий */
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+.connect-button:hover {
+  background-color: #3182ce;
+  transform: translateY(-2px);
+}
+.connect-button:active {
+  transform: translateY(0);
+}
+
+
+/* Вкладки навигации */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px; /* Меньше расстояние между кнопками */
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e2e8f0; /* Разделитель под вкладками */
+  padding-bottom: 15px;
+}
+
+/* Кнопки вкладок */
+.tab-button {
+  background: transparent; /* Прозрачный фон по умолчанию */
+  border: none;
+  padding: 10px 22px; /* Чуть меньше паддинг */
+  border-radius: 8px; /* Мягкие углы */
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #4a5568; /* Темно-серый текст */
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden; /* Для эффекта подсветки */
+}
+
+.tab-button:hover {
+  background: #edf2f7; /* Светло-серый фон при наведении */
+  color: #2d3748; /* Темнее текст */
+}
+
+.tab-button.active {
+  color: #2b6cb0; /* Активный синий текст */
+  /* background: #e0f2ff; Если нужен фон */
+  font-weight: 700;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* Толщина подчеркивания */
+    background-color: #2b6cb0; /* Цвет подчеркивания */
+    border-radius: 2px 2px 0 0;
+}
+
+
+/* Контейнер для содержимого вкладок */
+.tab-content > div {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Увеличил расстояние между секциями */
+}
+
+/* --- Общие стили для полей ввода и кнопок в формах --- */
+.swap-form,
+.admin-panel,
+.token-status {
+    background-color: #f7fafc; /* Очень светлый серый фон для секций */
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.swap-form h3,
+.admin-panel h3,
+.token-status h3 {
+    font-size: 1.8rem;
+    color: #2d3748;
+    margin-bottom: 20px;
+    text-align: left;
+    font-weight: 600;
+}
+.admin-panel h4 {
+    font-size: 1.4rem;
+    color: #4a5568;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-wrap: wrap; /* Для адаптивности */
+}
+
+.input-group label {
+    font-weight: 500;
+    color: #4a5568;
+    white-space: nowrap; /* Чтобы не переносилось */
+}
+
+.input-group input[type="number"],
+.input-group select {
+    flex: 1; /* Чтобы занимали доступное пространство */
+    padding: 12px 15px;
+    border: 1px solid #cbd5e0; /* Светло-серый бордюр */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #2d3748; /* Цвет текста в инпуте */
+    background-color: #ffffff; /* Белый фон инпута */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    min-width: 150px; /* Минимальная ширина для мобильных */
+}
+
+.input-group input[type="number"]:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #4299e1; /* Синий бордюр при фокусе */
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+/* Стили для disabled полей */
+.input-group input[type="number"]:disabled,
+.input-group select:disabled {
+  background-color: #edf2f7; /* Более светлый серый фон */
+  color: #a0aec0; /* Светло-серый текст */
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap; /* Для адаптивности */
+}
+
+.swap-form button,
+.admin-panel button {
+    background-color: #4299e1; /* Синий */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-grow: 1; /* Чтобы кнопки занимали доступное пространство */
+    min-width: 120px; /* Минимальная ширина кнопки */
+}
+
+.swap-form button:hover,
+.admin-panel button:hover {
+    background-color: #3182ce;
+    transform: translateY(-2px);
+}
+
+.swap-form button:active,
+.admin-panel button:active {
+    transform: translateY(0);
+}
+
+.swap-form button:disabled,
+.admin-panel button:disabled {
+  background-color: #a0aec0; /* Серый фон для неактивных кнопок */
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Сообщения о статусе */
+.status-message {
+    margin-top: 20px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    word-break: break-word; /* Для длинных сообщений об ошибках */
+}
+
+.status-message.error-message { /* Если ты используешь такой класс для ошибок */
+  background-color: #fef2f2; /* Очень светлый красный */
+  color: #e53e3e; /* Красный текст */
+  border: 1px solid #feb2b2;
+}
+.status-message:not(.error-message) {
+    background-color: #e6fffa; /* Светло-зеленый для успеха/инфо */
+    color: #38a169; /* Зеленый текст */
+    border: 1px solid #b2f5ea;
+}
+
+
+/* Разделитель */
+.admin-panel hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 25px 0;
+}
+
+/* Стили для TokenStatus */
+.token-status {
+    text-align: left;
+}
+.token-status p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #4a5568;
+    text-align: left; /* Переопределить центральное выравнивание из app-box p */
+}
+.token-status p strong {
+    color: #2d3748;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .app-box {
+    padding: 25px;
+  }
+  .app-title {
+    font-size: 2rem;
+  }
+  .tabs {
+    flex-wrap: wrap; /* Перенос кнопок вкладок на новую строку */
+    justify-content: flex-start; /* Выравнивание по левому краю */
+  }
+  .tab-button {
+    flex-grow: 1; /* Кнопки вкладок занимают всю ширину */
+  }
+  .input-group, .button-group {
+    flex-direction: column; /* Элементы форм в столбик на маленьких экранах */
+    gap: 10px;
+  }
+  .input-group input,
+  .input-group select,
+  .swap-form button,
+  .admin-panel button {
+    width: 100%; /* Занимают всю ширину */
+    min-width: unset;
+  }
 }

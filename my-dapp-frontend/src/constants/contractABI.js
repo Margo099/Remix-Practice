@@ -2,7 +2,7 @@
 
 // --- ABI для TokenSwap ---
 // Скопируйте ABI из my-dapp-backend/artifacts/contracts/TokenSwap.sol/TokenSwap.json
-export const TOKEN_SWAP_ABI = [
+export const tokenSwapAbi = [
     {
       "inputs": [
         {
@@ -155,11 +155,11 @@ export const TOKEN_SWAP_ABI = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "numberOfTokens",
           "type": "uint256"
         }
       ],
-      "name": "buyTokensA",
+      "name": "buyTokensAForUser",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -168,11 +168,11 @@ export const TOKEN_SWAP_ABI = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "numberOfTokens",
           "type": "uint256"
         }
       ],
-      "name": "buyTokensB",
+      "name": "buyTokensBForUser",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -227,6 +227,32 @@ export const TOKEN_SWAP_ABI = [
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintATokensToTokenSwap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintBTokensToTokenSwap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -423,7 +449,7 @@ export const TOKEN_SWAP_ABI = [
 
 // --- ABI для AToken (ERC20Base) ---
 // Скопируйте ABI из my-dapp-backend/artifacts/contracts/AToken.sol/AToken.json
-export const A_TOKEN_ABI = [
+export const aTokenAbi = [
     {
       "inputs": [
         {
@@ -434,6 +460,11 @@ export const A_TOKEN_ABI = [
         {
           "internalType": "uint256",
           "name": "_tokenPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_initialSupply",
           "type": "uint256"
         }
       ],
@@ -1105,7 +1136,7 @@ export const A_TOKEN_ABI = [
 
 // --- ABI для BToken (ERC20Base) ---
 // Скопируйте ABI из my-dapp-backend/artifacts/contracts/BToken.sol/BToken.json
-export const B_TOKEN_ABI = [
+export const bTokenAbi = [
     {
       "inputs": [
         {
@@ -1116,6 +1147,11 @@ export const B_TOKEN_ABI = [
         {
           "internalType": "uint256",
           "name": "_tokenPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_initialSupply",
           "type": "uint256"
         }
       ],
@@ -1785,7 +1821,13 @@ export const B_TOKEN_ABI = [
     }
   ];
 
+  // Минимальный ABI для ERC20 approve/allowance (если надо отдельно)
+export const erc20MinimalAbi = [
+  "function approve(address spender, uint256 amount) external returns (bool)",
+  "function allowance(address owner, address spender) external view returns (uint256)"
+];
+
 // --- Адреса контрактов (замените на те, что вы получили при деплое) ---
-export const TOKEN_SWAP_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-export const A_TOKEN_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const B_TOKEN_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+export const tokenSwapAddress = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
+export const aTokenAddress = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+export const bTokenAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";

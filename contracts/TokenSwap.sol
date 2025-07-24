@@ -52,7 +52,16 @@ contract TokenSwap is ReentrancyGuard {
     function getFees() public view returns (uint) {
         return fees;
     }
+    //минт только для теста фронта
+   function mintATokensToTokenSwap(uint amount) public onlyAdmin {
+    // Минтим токены на сам контракт TokenSwap для ликвидности
+    tokenAInstance.mint(amount, address(this));
+}
 
+function mintBTokensToTokenSwap(uint amount) public onlyAdmin {
+    // Минтим токены на сам контракт TokenSwap для ликвидности
+    tokenBInstance.mint(amount, address(this));
+}
     function swapTKA(uint amountTKA) public nonReentrant returns (uint) {
         require(amountTKA > 0, "Not enough TokenA");
         require(tokenA.balanceOf(msg.sender) >= amountTKA, "Insufficient AToken balance");
@@ -90,13 +99,34 @@ contract TokenSwap is ReentrancyGuard {
         emit TokenSwapped(msg.sender, "B->A", amountTKB, exchangeAmount, fees);
         return exchangeAmount;
     }
-    function buyTokensA(uint amount) public payable onlyAdmin {
-        tokenAInstance.buyTokens{value: msg.value}(amount);
-    }
-    function buyTokensB(uint amount) public payable onlyAdmin {
-        tokenBInstance.buyTokens{value: msg.value}(amount);
-    }
+   // function buyTokensA(uint amount) public payable onlyAdmin {
+     //   tokenAInstance.buyTokens{value: msg.value}(amount);
+ //   }
+   // function buyTokensB(uint amount) public payable onlyAdmin {
+     //   tokenBInstance.buyTokens{value: msg.value}(amount);
+ //   }
     
+    // for frontend
+function buyTokensAForUser(uint numberOfTokens) public payable { // remove onlyAdmin if for users
+    require(numberOfTokens > 0, "Amount must be greater than zero");
+    // Вычислить необходимое количество ETH на основе цены токена A
+    // Примечание: предполагается, что tokenAInstance.tokenPrice существует и корректно установлен
+    uint ethRequired = tokenAInstance.tokenPrice() * numberOfTokens;
+    require(msg.value == ethRequired, "Incorrect ETH amount sent");
+
+    // Mint токены A напрямую пользователю
+    tokenAInstance.mint(numberOfTokens * (10**tokenAInstance.decimals()), msg.sender);
+    // ETH отправляется на баланс TokenSwap или можно сразу перевести админу
+    // admin.transfer(msg.value); // Если ETH должен идти админу сразу
+    // Или оставить ETH на балансе TokenSwap для последующего вывода админом
+}
+function buyTokensBForUser(uint numberOfTokens) public payable {
+    require(numberOfTokens > 0, "Amount must be greater than zero");
+    uint ethRequired = tokenBInstance.tokenPrice() * numberOfTokens;
+    require(msg.value == ethRequired, "Incorrect ETH amount sent");
+
+    tokenBInstance.mint(numberOfTokens * (10**tokenBInstance.decimals()), msg.sender);
+}
     function withdrawTokens(address token, uint amount) public onlyAdmin {
     IERC20(token).transfer(admin, amount);
     emit TokensWithdrawn(token, amount);

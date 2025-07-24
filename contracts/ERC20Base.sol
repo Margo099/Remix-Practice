@@ -18,15 +18,34 @@ contract ERC20Base is IERC20, AccessControl {
         require(balanceOf(_from) >= _amount, "You have too low amount of tokens");
         _;
     }
-    constructor(string memory name_, string memory symbol_, uint initialSupply, address exchanger) {
+    // parameter `exchanger` to `initialReceiver` for frontend
+    constructor(string memory name_, string memory symbol_, uint initialSupply, address initialReceiver) {
         _name = name_;
         _symbol = symbol_;
         owner = msg.sender;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);  
+        _grantRole(MINTER_ROLE, msg.sender);    
 
-        _mint(initialSupply, exchanger);
+        // FIX: Mint initialSupply to the contract itself, if that's the intended logic
+        // Or to the initialReceiver if that's the desired initial holder.
+        // For buyTokens to work as it is, the tokens need to be in `address(this)`.
+        _mint(initialSupply, address(this)); // <-- MINT TO THE CONTRACT'S OWN ADDRESS
+        
+        // Also grant MINTER_ROLE to the initialReceiver (which will be TokenSwap address)
+        // if TokenSwap needs to mint later (e.g., via buyTokensAForUser/buyTokensBForUser functions)
+        if (initialReceiver != address(0)) {
+            _grantRole(MINTER_ROLE, initialReceiver);
+        }
     }
+   // constructor(string memory name_, string memory symbol_, uint initialSupply, address exchanger) {
+  //      _name = name_;
+  //      _symbol = symbol_;
+  //      owner = msg.sender;
+  //      _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+   //     _grantRole(MINTER_ROLE, msg.sender);  
+
+  //      _mint(initialSupply, exchanger);
+ //   }
     function name() external view override returns(string memory) {
         return _name;
     }
