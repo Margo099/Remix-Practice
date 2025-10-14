@@ -1,10 +1,12 @@
 #root {
-  max-width: 1280px;
+  max-width: 1280px; /* Сохраняем общую максимальную ширину для содержимого */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0; /* Убираем паддинг у root, чтобы AppContainer мог занять всю ширину */
   text-align: center;
+  color: #333; /* Темно-серый цвет текста по умолчанию */
 }
 
+/* Общие стили для логотипов */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -17,7 +19,6 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -26,17 +27,637 @@
     transform: rotate(360deg);
   }
 }
-
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
 .card {
   padding: 2em;
 }
-
 .read-the-docs {
   color: #888;
 }
+
+/* Стили для DApp интерфейса */
+
+/* Весь фон страницы белый */
+body {
+  background-color: #ffffff; /* Чистый белый фон для всей страницы */
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  color: #333; /* Основной цвет текста */
+  overflow-x: hidden; 
+}
+
+.app-container {
+  min-height: 100vh;
+  background-color: #ffffff; /* Белый фон для всего контейнера приложения */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Выравниваем по верхнему краю */
+  padding: 40px 16px; /* Общие отступы по бокам и сверху/снизу */
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+/* Основной белый контейнер (панель) */
+.app-box {
+  background: #ffffff; 
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Легкая тень для белого фона */
+  max-width: 700px;
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  margin-top: 0;
+  position: relative; /* Важно для позиционирования loading-overlay */
+  overflow: hidden;
+  animation: fadeInScale 0.7s ease-out forwards; /* Анимация появления */
+  border: 1px solid #e0e0e0; /* Тонкая светлая граница */
+}
+
+/* Анимация появления для .app-box (появляется снизу) */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Заголовок приложения */
+.app-title {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1a202c;
+  margin-bottom: 30px;
+  letter-spacing: -0.03em;
+  background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* пульсация для заголовка */
+  animation: textGlow 2s infinite alternate;
+}
+
+/* Анимация пульсации для заголовка */
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 5px rgba(79, 172, 254, 0.3), 0 0 10px rgba(0, 242, 254, 0.3);
+  }
+  to {
+    text-shadow: 0 0 15px rgba(79, 172, 254, 0.6), 0 0 25px rgba(0, 242, 254, 0.6);
+  }
+}
+
+
+/* Состояние подключения кошелька */
+.app-box p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #4a5568;
+}
+.app-box p span {
+  font-weight: 700;
+  color: #2b6cb0;
+}
+.app-box p.error-message {
+  color: #e53e3e;
+  font-weight: 600;
+  background-color: #fef2f2;
+  border: 1px solid #fed7d7;
+  padding: 10px;
+  border-radius: 8px;
+  animation: shake 0.5s ease-in-out; /* Анимация для ошибок */
+}
+
+/* Анимация "тряски" для ошибок */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+
+/* Кнопка "Connect Wallet" */
+.connect-button {
+  background-color: #5d5cde;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
+  margin-top: 25px;
+  box-shadow: 0 6px 12px rgba(93, 92, 222, 0.3);
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.connect-button:hover {
+  background-color: #4b4aba;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(93, 92, 222, 0.4);
+}
+.connect-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(93, 92, 222, 0.2);
+}
+.connect-button:disabled {
+  background-color: #a0aec0;
+  color: white; /* Цвет текста для disabled кнопки */
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  /* пульсация для disabled кнопки */
+  animation: pulseOpacity 1.5s infinite alternate;
+}
+
+/* Анимация пульсации для disabled кнопки */
+@keyframes pulseOpacity {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+
+/* Анимация свечения для кнопки подключения  */
+.connect-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: width 0.4s ease-out, height 0.4s ease-out;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.connect-button:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+
+/* Вкладки навигации */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 15px;
+}
+
+/* Кнопки вкладок */
+.tab-button {
+  background: transparent;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #4a5568;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.1s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-button:hover {
+  background: #f0f4f8;
+  color: #2d3748;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.tab-button:active {
+  transform: translateY(0);
+}
+
+.tab-button.active {
+  color: #4facfe;
+  font-weight: 700;
+}
+
+/* Анимация подчеркивания (уже была) */
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 2px 2px 0 0;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+
+/* Контейнер для содержимого вкладок */
+.tab-content > div {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Общие стили для полей ввода и кнопок в формах*/
+.swap-form,
+.admin-panel,
+.token-status {
+  background-color: #f7fafc;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  animation: fadeInFromLeft 0.5s ease-out forwards; /* Анимация появления блоков */
+}
+
+/* Анимация появления блоков */
+@keyframes fadeInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.swap-form h3,
+.admin-panel h3,
+.token-status h3 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 25px;
+  text-align: left;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Анимация для иконок внутри заголовков*/
+.swap-form h3 svg,
+.admin-panel h3 svg,
+.token-status h3 svg {
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+.swap-form h3:hover svg,
+.admin-panel h3:hover svg,
+.token-status h3:hover svg {
+  transform: rotate(10deg) scale(1.1);
+}
+
+.admin-panel h4 {
+  font-size: 1.5rem;
+  color: #4a5568;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px dashed #e2e8f0;
+  padding-bottom: 10px;
+}
+
+.input-group {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #4a5568;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.input-group input[type="number"],
+.input-group select {
+  flex: 1;
+  padding: 14px 18px;
+  border: 2px solid #cbd5e0;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  color: #2d3748;
+  background-color: #f8faff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  min-width: 180px;
+}
+
+.input-group input[type="number"]:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #5d5cde;
+  box-shadow: 0 0 0 4px rgba(93, 92, 222, 0.2);
+  background-color: #ffffff;
+}
+
+/* Стили для disabled полей */
+.input-group input[type="number"]:disabled,
+.input-group select:disabled {
+  background-color: #edf2f7;
+  color: #a0aec0;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.swap-form button,
+.admin-panel button {
+  background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-grow: 1;
+  min-width: 140px;
+  box-shadow: 0 5px 15px rgba(0, 242, 254, 0.2);
+  transform: scale(1);
+}
+
+.swap-form button:hover,
+.admin-panel button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 242, 254, 0.3);
+  opacity: 0.9;
+}
+
+.swap-form button:active,
+.admin-panel button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 3px 10px rgba(0, 242, 254, 0.1);
+}
+
+/* Стили для кнопок в состоянии загрузки */
+.swap-form button.loading,
+.admin-panel button.loading {
+  cursor: wait;
+  background: linear-gradient(45deg, #a0aec0 0%, #cbd5e0 100%); /* Более тусклый цвет */
+  box-shadow: none;
+  transform: none;
+  pointer-events: none; 
+}
+
+/* Скрываем текст кнопки и показываем спиннер, если кнопка в состоянии loading */
+.swap-form button.loading span,
+.admin-panel button.loading span {
+  display: none;
+}
+
+.swap-form button.loading .loader,
+.admin-panel button.loading .loader {
+  display: inline-block; /* Показываем спиннер */
+}
+
+/* Скрываем спиннер по умолчанию */
+.loader {
+  display: none;
+}
+
+
+.swap-form button:disabled,
+.admin-panel button:disabled {
+  background: #e2e8f0;
+  color: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Сообщения о статусе */
+.status-message {
+  margin-top: 25px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-weight: 500;
+  text-align: center;
+  word-break: break-word;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  animation: fadeInOutPulse 1.5s ease-out forwards;
+}
+
+/* Анимация пульсации для сообщений */
+@keyframes fadeInOutPulse {
+  0% { opacity: 0; transform: translateY(10px); }
+  50% { opacity: 1; transform: translateY(0px); }
+  100% { opacity: 1; transform: translateY(0px); }
+}
+
+
+.status-message.error-message { 
+  background-color: #ffe0e0;
+  color: #c00000;
+  border: 1px solid #ffb3b3;
+  animation: shake 0.5s ease-in-out, fadeInOutPulse 1.5s ease-out forwards;
+}
+.status-message:not(.error-message) {
+  background-color: #d4f8d4;
+  color: #008000;
+  border: 1px solid #a6e7a6;
+}
+
+/* Стили для TokenStatus */
+.token-status p {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Анимация появления списка */
+  animation: listItemFadeIn 0.5s ease-out forwards;
+  opacity: 0; /* Начинаем невидимым */
+}
+
+/* Анимация появления элементов списка */
+@keyframes listItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Анимация вращения спиннера */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Спиннер */
+.loader {
+  border: 4px solid #f3f3f3; /* Светло-серый фон */
+  border-top: 4px solid #4facfe; /* Цвет активной части спиннера */
+  border-radius: 50%;
+  width: 20px; /* Уменьшила размер для кнопок */
+  height: 20px; /* Уменьшила размер для кнопок */
+  animation: spin 1s linear infinite; /* Анимация вращения */
+  margin: 0 auto; /* Центрируем спиннер */
+  display: inline-block; /* Позволяет размещать рядом с текстом */
+  vertical-align: middle; /* Выравнивание по вертикали, если рядом текст */
+}
+
+/* Оверлей для блокировки UI во время загрузки */
+.loading-overlay {
+  position: absolute; /* Относительно родителя .app-box */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 1000; /* Поверх всех элементов */
+  border-radius: 20px; /* Совпадает с радиусом app-box */
+  backdrop-filter: blur(5px); /* Легкое размытие подложки */
+  opacity: 0; /* Начинаем невидимым */
+  pointer-events: none; /* Игнорировать клики, если невидимый */
+  transition: opacity 0.3s ease; /* Плавное появление/исчезновение */
+}
+
+.loading-overlay.active {
+  opacity: 1; /* Показываем оверлей */
+  pointer-events: all; /* Включаем обработку кликов (блокируем) */
+}
+
+.loading-overlay .loader { /* Спиннер в оверлее крупнее */
+  width: 40px;
+  height: 40px;
+  border-width: 5px;
+}
+
+.loading-overlay p {
+  color: #2d3748;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 15px;
+  animation: fadeAndMoveUp 0.8s ease-out infinite alternate;
+}
+
+/* Анимация для текста в оверлее */
+@keyframes fadeAndMoveUp {
+  from {
+    opacity: 0.7;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .app-box {
+    padding: 25px;
+    margin-top: 15px;
+  }
+
+  .app-title {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+  }
+
+  .tabs {
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 10px;
+  }
+
+  .tab-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+
+  .input-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-group input[type="number"],
+  .input-group select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .swap-form button,
+  .admin-panel button {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .swap-form h3,
+  .admin-panel h3,
+  .token-status h3 {
+    font-size: 1.6rem;
+  }
+  .admin-panel h4 {
+    font-size: 1.2rem;
+  }
+}
+button .loader {
+  display: none;
+}
+
+button.loading .loader {
+  display: inline-block;
+}
+
+button.loading span {
+  display: none;
+}
+
+

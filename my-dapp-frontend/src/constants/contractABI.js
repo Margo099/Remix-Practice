@@ -1,8 +1,8 @@
 // src/constants/contractABI.js (или src/contractABI.js)
 
 // --- ABI для TokenSwap ---
-// Скопируйте ABI из my-dapp-backend/artifacts/contracts/TokenSwap.sol/TokenSwap.json
-export const TOKEN_SWAP_ABI = [
+// ABI из my-dapp-backend/artifacts/contracts/TokenSwap.sol/TokenSwap.json
+export const tokenSwapAbi = [
     {
       "inputs": [
         {
@@ -155,11 +155,11 @@ export const TOKEN_SWAP_ABI = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "numberOfTokens",
           "type": "uint256"
         }
       ],
-      "name": "buyTokensA",
+      "name": "buyTokensAForUser",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -168,11 +168,11 @@ export const TOKEN_SWAP_ABI = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "numberOfTokens",
           "type": "uint256"
         }
       ],
-      "name": "buyTokensB",
+      "name": "buyTokensBForUser",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -227,6 +227,32 @@ export const TOKEN_SWAP_ABI = [
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintATokensToTokenSwap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintBTokensToTokenSwap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -422,8 +448,8 @@ export const TOKEN_SWAP_ABI = [
   ];
 
 // --- ABI для AToken (ERC20Base) ---
-// Скопируйте ABI из my-dapp-backend/artifacts/contracts/AToken.sol/AToken.json
-export const A_TOKEN_ABI = [
+//ABI из my-dapp-backend/artifacts/contracts/AToken.sol/AToken.json
+export const aTokenAbi = [
     {
       "inputs": [
         {
@@ -434,6 +460,11 @@ export const A_TOKEN_ABI = [
         {
           "internalType": "uint256",
           "name": "_tokenPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_initialSupply",
           "type": "uint256"
         }
       ],
@@ -1104,8 +1135,8 @@ export const A_TOKEN_ABI = [
   ];
 
 // --- ABI для BToken (ERC20Base) ---
-// Скопируйте ABI из my-dapp-backend/artifacts/contracts/BToken.sol/BToken.json
-export const B_TOKEN_ABI = [
+// ABI из my-dapp-backend/artifacts/contracts/BToken.sol/BToken.json
+export const bTokenAbi = [
     {
       "inputs": [
         {
@@ -1116,6 +1147,11 @@ export const B_TOKEN_ABI = [
         {
           "internalType": "uint256",
           "name": "_tokenPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_initialSupply",
           "type": "uint256"
         }
       ],
@@ -1785,7 +1821,75 @@ export const B_TOKEN_ABI = [
     }
   ];
 
-// --- Адреса контрактов (замените на те, что вы получили при деплое) ---
-export const TOKEN_SWAP_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-export const A_TOKEN_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const B_TOKEN_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  // Минимальный ABI для ERC20 approve/allowance (если надо отдельно)
+export const erc20MinimalAbi = [
+  "function approve(address spender, uint256 amount) external returns (bool)",
+  "function allowance(address owner, address spender) external view returns (uint256)",
+  // Добавьте эту строку для функции tokenPrice:
+  {
+    "inputs": [],
+    "name": "tokenPrice",
+    "outputs": [
+      {
+        "internalType": "uint256", // Или address, в зависимости от типа, который возвращает ваш tokenPrice
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view", // Это 'view' функция, так как она только читает состояние
+    "type": "function"
+  },
+  // Если у вас были другие функции, такие как name(), symbol(), decimals(),
+  // которые вы использовали, их тоже нужно добавить, например:
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "numberOfTokens", "type": "uint256"}
+    ],
+    "name": "buyTokens",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "address", "name": "_tokenSwapAddress", "type": "address"}
+    ],
+    "name": "setTokenSwapAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+];
+
+//Адреса контрактов
+export const tokenSwapAddress = "0xAD523115cd35a8d4E60B3C0953E0E0ac10418309";
+export const aTokenAddress = "0xB06c856C8eaBd1d8321b687E188204C1018BC4E5";
+export const bTokenAddress = "0xaB7B4c595d3cE8C85e16DA86630f2fc223B05057";
