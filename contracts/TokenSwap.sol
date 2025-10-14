@@ -57,7 +57,7 @@ contract TokenSwap is ReentrancyGuard {
     // Минтим токены на сам контракт TokenSwap для ликвидности
     tokenAInstance.mint(amount, address(this));
 }
-
+// только для тестирования фронтенда
 function mintBTokensToTokenSwap(uint amount) public onlyAdmin {
     // Минтим токены на сам контракт TokenSwap для ликвидности
     tokenBInstance.mint(amount, address(this));
