@@ -30,9 +30,9 @@
 - **Типы контрактов**: ERC-20, AMM, системы пожертвований, логика бронирования, Events, Interfaces
 
 ### 💻 Другие языки и инструменты
-- **JavaScript**: базовый уровень (тесты, фронт)    
+- **JavaScript**: тесты, фронт, бэкенд для dApp
 - **Java**: Java 17, ООП, Maven  
-- **Общие инструменты**: Git, GitHub, npm, Node.js, VS Code, IntelliJ IDEA
+- **Общие инструменты**: Git, GitHub, npm, Node.js, VS Code, IntelliJ IDEA, Docker, MongoDB
 
 ---
 
