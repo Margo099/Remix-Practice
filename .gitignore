@@ -11,9 +11,12 @@ cache/
 typechain/
 out/
 build-info/
+artifacts-dbg/
 
 # OpenZeppelin hardhat-upgrades / persisted files
 .openzeppelin/
+.deps/
+.states/
 
 # Environment / secrets
 .env
