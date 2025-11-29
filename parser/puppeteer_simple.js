@@ -11,7 +11,7 @@
 const fs = require('fs').promises;
 const puppeteer = require('puppeteer-core');
 
-// Небольшая утилка для ожидания (вместо page.waitForTimeout, чтобы не зависеть от версии Puppeteer), потому что при переходе по ссылке, требует подождать
+// Небольшая утилка для ожидания (вместо page.waitForTimeout, чтобы не зависеть от версии Puppeteer), потому что при переходе по ссылке, требует подождат
 function sleep(ms) {
   return new Promise((res) => setTimeout(res, ms));
 }
