@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+npm-debug.log
+package-lock.json
+# screenshot.jpg
+# product.txt
+# products-api.txt

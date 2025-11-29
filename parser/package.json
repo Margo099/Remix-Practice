@@ -1,0 +1,19 @@
+{
+  "name": "vprok-scraper",
+  "version": "1.0.0",
+  "description": "Парсер vprok.ru-часть 1 (скриншот + product.txt) и часть 2 (API-парсер категории)",
+  "main": "puppeteer_simple.js",
+  "scripts": {
+    "start": "npm run part1",
+    "part1": "node puppeteer_simple.js",
+    "part2": "node api-parser.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.31.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^2.0.0"
+  }
+}
