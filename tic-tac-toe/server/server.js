@@ -72,7 +72,6 @@ function generateToken() {
   return crypto.randomBytes(16).toString('hex')
 }
 
-// GET /api/token
 app.get('/api/token', async (req, res) => {
   try {
     if (!redisClient.isOpen) {
@@ -123,7 +122,7 @@ app.post('/api/result', async (req, res) => {
       text = `Результат: ${result}`
     }
 
-    // Проверка перед отправкой
+    //Проверка перед отправкой
     const botToken = process.env.TELEGRAM_BOT_TOKEN
     const chatId = process.env.TELEGRAM_CHAT_ID
 
@@ -168,7 +167,7 @@ app.post('/api/result', async (req, res) => {
   }
 })
 
-// Диагностика
+//Диагностика
 if (API_SECRET) {
   app. get('/api/_tokens', async (req, res) => {
     try {
@@ -192,7 +191,7 @@ if (API_SECRET) {
   })
 }
 
-// SPA fallback
+//SPA fallback
 if (fs.existsSync(clientDist)) {
   app. get('*', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'))
