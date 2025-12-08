@@ -468,7 +468,7 @@ export default function GameBoard(){
                   </Text>
                 </Box>
                 <Text color="sage.500" fontSize="sm" textAlign="center" fontStyle="italic">
-                  ✨ Промокод отправлен в твой Telegram-бот
+                  ✨ Промокод отправлен в твой Telegram-бот 
                 </Text>
               </VStack>
             ) : (

@@ -130,7 +130,7 @@ export default function App(){
               </HStack>
               <HStack>
                 <Box w="8px" h="8px" borderRadius="full" bg="indigo.400" />
-                <Text color="gray.700">Промокод автоматически отправляется в <strong>Telegram-бот</strong></Text>
+                <Text color="gray.700">Промокод автоматически отправляется в Telegram-бот <strong> @PlayPromo_Bot </strong></Text>
               </HStack>
             </VStack>
           </Box>
