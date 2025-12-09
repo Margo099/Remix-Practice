@@ -1,8 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Container, Heading, Text, VStack, HStack, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
 import GameBoard from './components/GameBoard'
 
-export default function App(){
+export default function App() {
+  const [telegramUser, setTelegramUser] = useState(null)
+
+  // Получение данных пользователя из Telegram Web App
+  useEffect(() => {
+    if (window.Telegram?. WebApp) {
+      const tg = window.Telegram.WebApp
+      tg.ready()
+      tg.expand() // Развернуть на весь экран
+      
+      const user = tg.initDataUnsafe?.user
+      if (user) {
+        console.log('✅ Telegram User detected:', user)
+        setTelegramUser({
+          id: user.id,
+          firstName: user.first_name,
+          lastName: user. last_name,
+          username:  user.username
+        })
+      } else {
+        console.log('⚠️ No Telegram user data (opened outside Telegram)')
+      }
+    } else {
+      console.log('⚠️ Telegram WebApp not available')
+    }
+  }, [])
+
   return (
     <Box 
       minH="100vh" 
@@ -31,7 +57,7 @@ export default function App(){
         pointerEvents="none"
         animation="float 6s ease-in-out infinite"
         sx={{
-          '@keyframes float': {
+          '@keyframes float':  {
             '0%, 100%': { transform: 'rotate(15deg) translateY(0px)' },
             '50%': { transform: 'rotate(15deg) translateY(-20px)' }
           }
@@ -58,7 +84,7 @@ export default function App(){
         left="10%"
         opacity={0.1}
         fontSize="100px"
-        color="brand.400"
+        color="brand. 400"
         pointerEvents="none"
         animation="float 7s ease-in-out infinite 1s"
       >
@@ -83,7 +109,7 @@ export default function App(){
             <Heading 
               size="3xl" 
               fontFamily="heading" 
-              color="indigo.800"
+              color="indigo. 800"
               mb={3}
               fontWeight="700"
               letterSpacing="tight"
@@ -99,9 +125,31 @@ export default function App(){
             >
               Сыграй и получи эксклюзивный промокод
             </Text>
+            
+            {/* Приветствие пользователя Telegram */}
+            {telegramUser && (
+              <Box 
+                mt={4} 
+                bg="whiteAlpha.900" 
+                backdropFilter="blur(10px)"
+                p={4} 
+                borderRadius="16px"
+                border="1px solid"
+                borderColor="whiteAlpha.800"
+                boxShadow="0 4px 16px rgba(75, 85, 99, 0.1)"
+              >
+                <Text color="indigo.700" fontSize="lg" fontWeight="600">
+                  👋 Привет, {telegramUser.firstName}!
+                </Text>
+                <Text color="gray.600" fontSize="sm" mt={1}>
+                  Уведомления будут приходить в твой Telegram
+                </Text>
+              </Box>
+            )}
           </Box>
 
-          <GameBoard />
+          {/* Передаём telegramUser в GameBoard */}
+          <GameBoard telegramUser={telegramUser} />
 
           <Box 
             bg="whiteAlpha.900"
@@ -117,20 +165,20 @@ export default function App(){
             </Heading>
             <VStack spacing={4} align="start">
               <HStack>
-                <Box w="8px" h="8px" borderRadius="full" bg="brand.400" />
+                <Box w="8px" h="8px" borderRadius="full" bg="brand. 400" />
                 <Text color="gray.700">Ты играешь <strong>цветами ❀</strong>, компьютер — <strong>листьями ✿</strong></Text>
               </HStack>
               <HStack>
                 <Box w="8px" h="8px" borderRadius="full" bg="sage.500" />
-                <Text color="gray.700">Цель — выстроить <strong>три</strong> своих символа в ряд</Text>
+                <Text color="gray. 700">Цель — выстроить <strong>три</strong> своих символа в ряд</Text>
               </HStack>
               <HStack>
                 <Box w="8px" h="8px" borderRadius="full" bg="gold.400" />
                 <Text color="gray.700">При победе ты получаешь <strong>5-значный промокод</strong></Text>
               </HStack>
               <HStack>
-                <Box w="8px" h="8px" borderRadius="full" bg="indigo.400" />
-                <Text color="gray.700">Промокод автоматически отправляется в Telegram-бот <strong> @PlayPromo_Bot </strong></Text>
+                <Box w="8px" h="8px" borderRadius="full" bg="indigo. 400" />
+                <Text color="gray.700">Промокод автоматически отправляется в Telegram-бот <strong>@PlayPromo_Bot</strong></Text>
               </HStack>
             </VStack>
           </Box>
@@ -140,7 +188,7 @@ export default function App(){
             backdropFilter="blur(20px)"
             p={8} 
             borderRadius="24px"
-            boxShadow="0 8px 32px rgba(75, 85, 99, 0. 12)"
+            boxShadow="0 8px 32px rgba(75, 85, 99, 0.12)"
             border="1px solid"
             borderColor="whiteAlpha.800"
           >
@@ -156,7 +204,7 @@ export default function App(){
                   py={4}
                 >
                   <Box flex="1" textAlign="left" fontWeight="500" color="sage.800">
-                    Почему так сложно выиграть?
+                    Почему так сложно выиграть? 
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -169,7 +217,7 @@ export default function App(){
                 <AccordionButton 
                   bg="brand.50" 
                   borderRadius="12px" 
-                  _hover={{ bg: 'brand.100' }}
+                  _hover={{ bg: 'brand. 100' }}
                   py={4}
                 >
                   <Box flex="1" textAlign="left" fontWeight="500" color="brand.800">
@@ -218,9 +266,9 @@ export default function App(){
           </Box>
 
           <Box textAlign="center" fontSize="sm" color="gray. 600" py={4}>
-            <Text>Сделано с ❤️ для женщин </Text>
+            <Text>Сделано с ❤️ для женщин</Text>
             <Text mt={1} fontSize="xs" color="gray.500">
-              © 2025 Крестики-нолики. Все права защищены. 
+              © 2025 Крестики-нолики. Все права защищены.
             </Text>
           </Box>
         </VStack>

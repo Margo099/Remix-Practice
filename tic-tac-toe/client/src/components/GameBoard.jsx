@@ -20,9 +20,9 @@ const shimmer = keyframes`
 `
 
 const WIN_MESSAGES = [
-  'Ты невероятна!  🎉',
-  'Потрясающе!  Ты победила!  ✨',
-  'Браво!  Отличная игра!  🌟',
+  'Ты невероятна! 🎉',
+  'Потрясающе!  Ты победила! ✨',
+  'Браво! Отличная игра! 🌟',
   'Ты мастер стратегии! 💎',
   'Фантастическая победа! 🏆'
 ]
@@ -30,9 +30,9 @@ const WIN_MESSAGES = [
 const LOSE_MESSAGES = [
   'Не в этот раз 💫',
   'Почти получилось! 🌸',
-  'Ещё чуть-чуть!   🌺',
+  'Ещё чуть-чуть!  🌺',
   'В следующий раз точно! 🍀',
-  'Не сдавайся!  💪'
+  'Не сдавайся! 💪'
 ]
 
 const DRAW_MESSAGES = [
@@ -44,10 +44,10 @@ const DRAW_MESSAGES = [
 ]
 
 const LOSE_BODY_MESSAGES = [
-  'Тебе осталось совсем чуть-чуть!   Давай попробуем снова?',
-  'Ещё немного практики и победа твоя! Продолжим?',
-  'Совсем близко!  Не сдавайся, попробуй ещё раз! ',
-  'У тебя почти получилось!  Сыграем ещё? ',
+  'Тебе осталось совсем чуть-чуть!  Давай попробуем снова? ',
+  'Ещё немного практики и победа твоя!  Продолжим? ',
+  'Совсем близко! Не сдавайся, попробуй ещё раз! ',
+  'У тебя почти получилось! Сыграем ещё? ',
   'Ты на правильном пути! Давай попробуем снова? '
 ]
 
@@ -55,12 +55,12 @@ const DRAW_BODY_MESSAGES = [
   'Почти получилось! Ещё один раунд?',
   'Была близка к победе! Попробуем ещё?',
   'Отличная партия! Сыграем снова?',
-  'Чуть-чуть не хватило!  Давай ещё раз? ',
-  'Неплохо!  Готова к реваншу? '
+  'Чуть-чуть не хватило! Давай ещё раз?',
+  'Неплохо! Готова к реваншу?'
 ]
 
 function getRandomMessage(messages) {
-  return messages[Math.floor(Math.random() * messages.length)]
+  return messages[Math.floor(Math. random() * messages.length)]
 }
 
 function generatePromo(){
@@ -96,7 +96,7 @@ function bestMove(board){
     if(isMax){
       let best = -Infinity
       for(let i=0;i<9;i++){
-        if(! bs[i]){
+        if(!bs[i]){
           bs[i] = AI
           const val = minimax(bs, depth+1, false)
           bs[i] = null
@@ -111,7 +111,7 @@ function bestMove(board){
           bs[i] = PLAYER
           const val = minimax(bs, depth+1, true)
           bs[i] = null
-          best = Math.  min(best, val)
+          best = Math.min(best, val)
         }
       }
       return best
@@ -131,26 +131,26 @@ function bestMove(board){
       }
     }
   }
-  return move ??    board.  findIndex(x => !  x)
+  return move ??  board. findIndex(x => ! x)
 }
 
 function getAIMove(board){
-  const emptyIndices = board.map((v,i) => v ?    null : i).  filter(x => x !== null)
+  const emptyIndices = board.map((v,i) => v ?  null : i).filter(x => x !== null)
   if(emptyIndices.length === 0) return null
 
   if(Math.random() < 0.90){
     return bestMove(board)
   } else {
-    return emptyIndices[Math.floor(Math.  random() * emptyIndices.  length)]
+    return emptyIndices[Math.floor(Math. random() * emptyIndices.length)]
   }
 }
 
-const FlowerIcon = ({ ...  props }) => (
-  <Box 
-    display="flex" 
-    alignItems="center" 
-    justifyContent="center" 
-    w="100%" 
+const FlowerIcon = ({ ... props }) => (
+  <Box
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+    w="100%"
     h="100%"
     {...props}
   >
@@ -158,12 +158,12 @@ const FlowerIcon = ({ ...  props }) => (
   </Box>
 )
 
-const LeafIcon = ({ ... props }) => (
-  <Box 
-    display="flex" 
-    alignItems="center" 
-    justifyContent="center" 
-    w="100%" 
+const LeafIcon = ({ ...props }) => (
+  <Box
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+    w="100%"
     h="100%"
     {...props}
   >
@@ -171,8 +171,8 @@ const LeafIcon = ({ ... props }) => (
   </Box>
 )
 
-export default function GameBoard(){
-  const [board, setBoard] = useState(Array(9). fill(null))
+export default function GameBoard({ telegramUser }){
+  const [board, setBoard] = useState(Array(9).fill(null))
   const [status, setStatus] = useState('Твой ход')
   const [gameOver, setGameOver] = useState(false)
   const [aiThinking, setAiThinking] = useState(false)
@@ -223,14 +223,14 @@ export default function GameBoard(){
 
   function handleClick(i){
     if(gameOver || board[i] || aiThinking) return
-    
-    const newBoard = [... board]
+
+    const newBoard = [...board]
     newBoard[i] = PLAYER
     setBoard(newBoard)
-    
+
     const res = checkResult(newBoard)
     if(res) return finalize(res)
-    
+
     setAiThinking(true)
     setTimeout(() => {
       makeAIMove(newBoard)
@@ -244,7 +244,7 @@ export default function GameBoard(){
       newBoard[aiMove] = AI
       setBoard(newBoard)
       setAiThinking(false)
-      
+
       const res = checkResult(newBoard)
       if(res) return finalize(res)
     } else {
@@ -255,10 +255,10 @@ export default function GameBoard(){
   async function finalize(res){
     // Защита от повторного вызова
     if(gameOver) return
-    
+
     setGameOver(true)
     setAiThinking(false)
-    
+
     if(res.winner === PLAYER){
       const message = getRandomMessage(WIN_MESSAGES)
       setModalMessage(message)
@@ -268,7 +268,14 @@ export default function GameBoard(){
       const code = generatePromo()
       setPromo(code)
       onOpen()
-      await notifyServer('win', code)
+      
+      // Отправляем уведомление через новый API
+      if(telegramUser) {
+        await notifyWinner('❀', code)
+      } else {
+        // Fallback на старый API если не из Telegram
+        await notifyServer('win', code)
+      }
     } else if(res.winner === AI){
       const message = getRandomMessage(LOSE_MESSAGES)
       const bodyText = getRandomMessage(LOSE_BODY_MESSAGES)
@@ -277,7 +284,13 @@ export default function GameBoard(){
       setStatus('Не в этот раз')
       setLosses(l => l + 1)
       onOpen()
-      await notifyServer('lose')
+      
+      // Отправляем уведомление о проигрыше
+      if(telegramUser) {
+        await notifyResult('lose', '✿')
+      } else {
+        await notifyServer('lose')
+      }
     } else {
       const message = getRandomMessage(DRAW_MESSAGES)
       const bodyText = getRandomMessage(DRAW_BODY_MESSAGES)
@@ -286,11 +299,62 @@ export default function GameBoard(){
       setStatus('Ничья')
       setDraws(d => d + 1)
       onOpen()
-      await notifyServer('draw')
+      
+      // Отправляем уведомление о ничьей
+      if(telegramUser) {
+        await notifyResult('draw', '🤝')
+      } else {
+        await notifyServer('draw')
+      }
     }
     requestToken()
   }
 
+  // Новый метод для отправки уведомлений о победе
+  async function notifyWinner(winner, code){
+    try{
+      await fetch('/api/notify-winner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          winner,
+          telegramUserId: telegramUser. id,
+          telegramUsername: telegramUser.username || telegramUser.firstName,
+          token,
+          code
+        })
+      })
+      console.log('✅ Winner notification sent')
+    }catch(err){
+      console.error('❌ Error notifying winner:', err)
+    }
+  }
+
+  // Новый метод для отправки уведомлений о проигрыше/ничьей
+  async function notifyResult(result, symbol){
+    try{
+      await fetch('/api/notify-result', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          result,
+          symbol,
+          telegramUserId: telegramUser.id,
+          telegramUsername: telegramUser.username || telegramUser.firstName,
+          token
+        })
+      })
+      console.log(`✅ Result notification sent: ${result}`)
+    }catch(err){
+      console.error('❌ Error notifying result:', err)
+    }
+  }
+
+  // Старый метод (fallback)
   async function notifyServer(result, code){
     try{
       await fetch('/api/result', {
@@ -302,38 +366,38 @@ export default function GameBoard(){
         body: JSON.stringify({ result, code })
       })
     }catch(err){
-      console.  error(err)
+      console.error(err)
     }
   }
 
   return (
     <VStack spacing={8} position="relative">
       <HStack spacing={4} flexWrap="wrap" justifyContent="center">
-        <Badge 
-          colorScheme="green" 
-          fontSize="md" 
-          px={4} 
-          py={2} 
+        <Badge
+          colorScheme="green"
+          fontSize="md"
+          px={4}
+          py={2}
           borderRadius="full"
           boxShadow="0 4px 12px rgba(109, 141, 109, 0.25)"
         >
           🏆 Побед: {wins}
         </Badge>
-        <Badge 
-          colorScheme="pink" 
-          fontSize="md" 
-          px={4} 
-          py={2} 
+        <Badge
+          colorScheme="pink"
+          fontSize="md"
+          px={4}
+          py={2}
           borderRadius="full"
           boxShadow="0 4px 12px rgba(217, 117, 145, 0.25)"
         >
           😔 Поражений: {losses}
         </Badge>
-        <Badge 
-          colorScheme="purple" 
-          fontSize="md" 
-          px={4} 
-          py={2} 
+        <Badge
+          colorScheme="purple"
+          fontSize="md"
+          px={4}
+          py={2}
           borderRadius="full"
           boxShadow="0 4px 12px rgba(107, 126, 194, 0.25)"
         >
@@ -341,17 +405,17 @@ export default function GameBoard(){
         </Badge>
       </HStack>
 
-      <Text 
-        color="indigo.700" 
-        fontSize="xl" 
+      <Text
+        color="indigo.700"
+        fontSize="xl"
         fontWeight="600"
         animation={aiThinking ? `${pulse} 1. 5s infinite` : 'none'}
       >
-        {aiThinking ? 'Компьютер думает...' : status}
+        {aiThinking ? 'Компьютер думает...' :  status}
       </Text>
 
       <Box
-        bg="linear-gradient(135deg, rgba(255,255,255,0.  98), rgba(246,248,246,0. 98))"
+        bg="linear-gradient(135deg, rgba(255,255,255,0.98), rgba(246,248,246,0.98))"
         p={6}
         borderRadius="24px"
         boxShadow="0 12px 48px rgba(75, 85, 99, 0.18)"
@@ -363,7 +427,7 @@ export default function GameBoard(){
           position: 'absolute',
           inset: 0,
           borderRadius: '24px',
-          background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.  w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23d4a93d\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23d4a93d\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
           opacity: 0.4,
           pointerEvents: 'none'
         }}
@@ -389,7 +453,7 @@ export default function GameBoard(){
               h="105px"
               minW="105px"
               minH="105px"
-              _hover={{ 
+              _hover={{
                 transform: cell || gameOver || aiThinking ? 'none' : 'translateY(-4px) scale(1.02)',
                 boxShadow: cell || gameOver || aiThinking ? undefined : '0 8px 24px rgba(168,189,168,0.3)',
                 borderColor: cell || gameOver || aiThinking ? undefined : 'gold.400'
@@ -403,9 +467,9 @@ export default function GameBoard(){
         </SimpleGrid>
       </Box>
 
-      <Button 
-        variant="secondary" 
-        size="lg" 
+      <Button
+        variant="secondary"
+        size="lg"
         onClick={reset}
       >
         🔄 Начать заново
@@ -413,14 +477,14 @@ export default function GameBoard(){
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="md">
         <ModalOverlay bg="blackAlpha.500" backdropFilter="blur(10px)" />
-        <ModalContent 
-          borderRadius="24px" 
+        <ModalContent
+          borderRadius="24px"
           mx={4}
           bg="white"
           boxShadow="0 20px 60px rgba(75, 85, 99, 0.3)"
         >
-          <ModalHeader 
-            fontSize="3xl" 
+          <ModalHeader
+            fontSize="3xl"
             fontFamily="heading"
             color={promo ? 'brand.600' : 'indigo.700'}
             pt={8}
@@ -430,24 +494,24 @@ export default function GameBoard(){
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            {promo ?   (
+            {promo ?  (
               <VStack spacing={4}>
                 <Text color="sage.600" fontSize="lg" textAlign="center">
                   Твой эксклюзивный промокод:
                 </Text>
-                <Box 
+                <Box
                   bg="linear-gradient(135deg, #fef5f7, #fdf5e0)"
-                  px={8} 
-                  py={4} 
-                  borderRadius="16px" 
+                  px={8}
+                  py={4}
+                  borderRadius="16px"
                   border="2px solid"
                   borderColor="gold.300"
                   boxShadow="0 4px 20px rgba(212, 169, 61, 0.2)"
                   position="relative"
                   overflow="hidden"
                   _before={{
-                    content: '""',
-                    position: 'absolute',
+                    content:  '""',
+                    position:  'absolute',
                     top: 0,
                     left: '-100%',
                     width: '200%',
@@ -456,10 +520,10 @@ export default function GameBoard(){
                     animation: `${shimmer} 3s infinite`
                   }}
                 >
-                  <Text 
-                    fontSize="4xl" 
-                    fontWeight="bold" 
-                    color="indigo.700" 
+                  <Text
+                    fontSize="4xl"
+                    fontWeight="bold"
+                    color="indigo.700"
                     letterSpacing="wider"
                     fontFamily="heading"
                     textAlign="center"
@@ -468,7 +532,7 @@ export default function GameBoard(){
                   </Text>
                 </Box>
                 <Text color="sage.500" fontSize="sm" textAlign="center" fontStyle="italic">
-                  ✨ Промокод отправлен в твой Telegram-бот 
+                  {telegramUser ?  '✨ Промокод отправлен в твой Telegram-бот' : '✨ Сохрани промокод! '}
                 </Text>
               </VStack>
             ) : (
@@ -481,13 +545,13 @@ export default function GameBoard(){
           </ModalBody>
 
           <ModalFooter justifyContent="center" pb={8}>
-            <Button 
-              variant="primary" 
-              size="lg" 
+            <Button
+              variant="primary"
+              size="lg"
               onClick={() => { onClose(); reset(); }}
               mr={3}
             >
-              {promo ? 'Сыграть ещё' : 'Ещё разок!  '}
+              {promo ? 'Сыграть ещё' : 'Ещё разок! '}
             </Button>
             <Button variant="ghost" onClick={onClose}>
               Закрыть

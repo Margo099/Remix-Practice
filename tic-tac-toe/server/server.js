@@ -5,10 +5,10 @@ try {
   console.warn('dotenv not found, using system env vars')
 }
 
-console.log('🐛 DEBUG TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ?  
-  `${process.env.TELEGRAM_BOT_TOKEN. slice(0, 10)}... (length: ${process.env. TELEGRAM_BOT_TOKEN. length})` : 
+console.log('🐛 DEBUG TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ?   
+  `${process.env.TELEGRAM_BOT_TOKEN. slice(0, 10)}... (length: ${process.env.TELEGRAM_BOT_TOKEN.length})` : 
   '❌ UNDEFINED')
-console.log('🐛 DEBUG TELEGRAM_CHAT_ID:', process.env.TELEGRAM_CHAT_ID)
+console.log('🐛 DEBUG TELEGRAM_CHAT_ID:', process.env. TELEGRAM_CHAT_ID)
 
 const express = require('express')
 const path = require('path')
@@ -22,13 +22,13 @@ const TelegramBot = require('node-telegram-bot-api')
 const app = express()
 const PORT = process.env.PORT || 3000
 
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || ''
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || ''
+const TELEGRAM_BOT_TOKEN = process. env.TELEGRAM_BOT_TOKEN || ''
+const TELEGRAM_CHAT_ID = process.env. TELEGRAM_CHAT_ID || ''
 const API_SECRET = process.env.API_SECRET || ''
-const TOKEN_TTL_SEC = parseInt(process. env.TOKEN_TTL_MS || '300000', 10) / 1000
-const REDIS_URL = process.env. REDIS_URL || 'redis://localhost:6379'
+const TOKEN_TTL_SEC = parseInt(process.env.TOKEN_TTL_MS || '300000', 10) / 1000
+const REDIS_URL = process. env.REDIS_URL || 'redis://localhost:6379'
 
-app. use(bodyParser.json())
+app.use(bodyParser.json())
 app.use(cors())
 
 // Раздача статических файлов
@@ -41,26 +41,26 @@ if (fs.existsSync(clientDist)) {
 const redisClient = redis.createClient({ 
   url: REDIS_URL,
   socket: {
-    tls: REDIS_URL.startsWith('rediss://'),
-    rejectUnauthorized: false,
+    tls:  REDIS_URL.startsWith('rediss://'),
+    rejectUnauthorized:  false,
     reconnectStrategy: (retries) => {
       if (retries > 10) {
         console.error('❌ Redis: max retries reached')
         return new Error('Redis connection failed')
       }
-      console. log(`🔄 Redis retry ${retries}/10... `)
+      console.log(`🔄 Redis retry ${retries}/10... `)
       return retries * 500
     }
   }
 })
 
 redisClient.on('error', err => console.error('❌ Redis error:', err. message))
-redisClient.on('connect', () => console.log('🔄 Redis connecting... '))
+redisClient.on('connect', () => console.log('🔄 Redis connecting...'))
 redisClient.on('ready', () => console.log('✅ Redis ready'))
 
 async function connectRedis() {
   try {
-    await redisClient.connect()
+    await redisClient. connect()
   } catch (err) {
     console.error('❌ Redis connection failed:', err.message)
     console.warn('⚠️ Server will start but tokens will NOT work')
@@ -70,7 +70,6 @@ connectRedis()
 
 // Telegram Bot
 let bot = null
-const userChatIds = new Map() // Хранилище userId -> chatId
 
 if (TELEGRAM_BOT_TOKEN) {
   try {
@@ -82,9 +81,15 @@ if (TELEGRAM_BOT_TOKEN) {
       const userId = msg.from.id
       const username = msg.from.username || msg.from.first_name
       
-      // Сохраняем связь userId -> chatId
-      userChatIds.set(userId, chatId)
-      console.log(`👤 User registered: ${username} (ID: ${userId})`)
+      // Сохраняем связь userId -> chatId В REDIS
+      try {
+        if (redisClient.isOpen) {
+          await redisClient.set(`user:${userId}:chatId`, chatId.toString())
+          console.log(`👤 User registered: ${username} (ID: ${userId}, chatId: ${chatId})`)
+        }
+      } catch (err) {
+        console.error('❌ Error saving user:', err.message)
+      }
       
       // Генерируем токен
       const token = generateToken()
@@ -92,7 +97,7 @@ if (TELEGRAM_BOT_TOKEN) {
       try {
         if (redisClient.isOpen) {
           await redisClient. setEx(`token:${token}`, TOKEN_TTL_SEC, Date.now().toString())
-          console.log(`✅ Token issued for ${username}: ${token}`)
+          console.log(`✅ Token issued for ${username}:  ${token}`)
         }
       } catch (err) {
         console.error('❌ Token generation error:', err.message)
@@ -119,7 +124,7 @@ if (TELEGRAM_BOT_TOKEN) {
     })
     
     bot.on('polling_error', (error) => {
-      console. error('❌ Telegram polling error:', error. message)
+      console.error('❌ Telegram polling error:', error. message)
     })
     
     console.log('✅ Telegram Bot initialized')
@@ -164,11 +169,11 @@ app.post('/api/validate-token', async (req, res) => {
     }
 
     const exists = await redisClient.exists(`token:${token}`)
-    console.log(`🔍 Token validation: ${token} - ${exists ? 'VALID' : 'INVALID'}`)
+    console.log(`🔍 Token validation: ${token} - ${exists ? 'VALID' :  'INVALID'}`)
     
     res.json({ valid: exists === 1 })
   } catch (err) {
-    console.error('❌ Token validation error:', err. message)
+    console.error('❌ Token validation error:', err.message)
     res.status(500).json({ valid: false, error: 'Server error' })
   }
 })
@@ -176,25 +181,41 @@ app.post('/api/validate-token', async (req, res) => {
 // API: Уведомление о победе
 app.post('/api/notify-winner', async (req, res) => {
   try {
-    const { winner, telegramUserId, telegramUsername, token } = req.body
+    const { winner, telegramUserId, telegramUsername, token, code } = req.body
     
-    console.log(`🎉 Winner notification: ${winner} (User: ${telegramUsername}, ID: ${telegramUserId})`)
+    console.log(`🎉 Winner notification: ${winner} (User: ${telegramUsername}, ID: ${telegramUserId}, Code: ${code || 'N/A'})`)
     
     if (!bot) {
       console.warn('⚠️ Telegram bot not initialized')
       return res.json({ success: true, note: 'Bot not configured' })
     }
     
-    // Получаем chatId пользователя
-    const chatId = userChatIds.get(telegramUserId) || TELEGRAM_CHAT_ID
+    // Получаем chatId из Redis
+    let chatId = TELEGRAM_CHAT_ID
+    try {
+      if (redisClient.isOpen) {
+        const storedChatId = await redisClient.get(`user:${telegramUserId}:chatId`)
+        if (storedChatId) {
+          chatId = parseInt(storedChatId, 10)
+          console.log(`✅ Found chatId for user ${telegramUserId}: ${chatId}`)
+        } else {
+          console.log(`⚠️ No chatId found for user ${telegramUserId}, using default:  ${TELEGRAM_CHAT_ID}`)
+        }
+      }
+    } catch (err) {
+      console.error('❌ Error getting chatId:', err.message)
+    }
     
     if (chatId) {
       try {
         await bot.sendMessage(chatId, 
-          `🎉 Поздравляем, ${telegramUsername || 'игрок'}!\n\n` +
+          `🎉 *Поздравляем, ${telegramUsername || 'игрок'}!*\n\n` +
           `Символ "${winner}" победил в игре!\n\n` +
+          `🎁 *Твой промокод:* \`${code}\`\n\n` +
+          `_Скопируй промокод и используй его для получения скидки! _\n\n` +
           `Хочешь сыграть ещё?  Получи новый токен командой /start`,
           {
+            parse_mode: 'Markdown',
             reply_markup: {
               inline_keyboard: [[
                 {
@@ -205,7 +226,7 @@ app.post('/api/notify-winner', async (req, res) => {
             }
           }
         )
-        console.log(`✅ Notification sent to ${telegramUsername}`)
+        console.log(`✅ Notification sent to ${telegramUsername} with promo:  ${code}`)
       } catch (err) {
         console.error('❌ Telegram send error:', err.message)
       }
@@ -226,6 +247,83 @@ app.post('/api/notify-winner', async (req, res) => {
   }
 })
 
+// API: Уведомление о проигрыше/ничьей
+app.post('/api/notify-result', async (req, res) => {
+  try {
+    const { result, symbol, telegramUserId, telegramUsername, token } = req.body
+    
+    console.log(`📊 Result notification: ${result} (User: ${telegramUsername}, ID: ${telegramUserId})`)
+    
+    if (!bot) {
+      console.warn('⚠️ Telegram bot not initialized')
+      return res.json({ success: true, note:  'Bot not configured' })
+    }
+    
+    // Получаем chatId из Redis
+    let chatId = TELEGRAM_CHAT_ID
+    try {
+      if (redisClient. isOpen) {
+        const storedChatId = await redisClient.get(`user:${telegramUserId}:chatId`)
+        if (storedChatId) {
+          chatId = parseInt(storedChatId, 10)
+          console.log(`✅ Found chatId for user ${telegramUserId}: ${chatId}`)
+        } else {
+          console.log(`⚠️ No chatId found for user ${telegramUserId}, using default`)
+        }
+      }
+    } catch (err) {
+      console.error('❌ Error getting chatId:', err.message)
+    }
+    
+    if (chatId) {
+      try {
+        let text = ''
+        if (result === 'lose') {
+          text = 
+            `😔 *Не в этот раз, ${telegramUsername}!*\n\n` +
+            `Символ "${symbol}" победил.\n\n` +
+            `Не сдавайся! Попробуй ещё раз — победа уже близко!  💪\n\n` +
+            `Хочешь попробовать снова? Нажми кнопку ниже!`
+        } else if (result === 'draw') {
+          text = 
+            `🤝 *Ничья, ${telegramUsername}!*\n\n` +
+            `Обе стороны сыграли отлично!\n\n` +
+            `Ты очень близко к победе.  Сыграй ещё раз!  🎯\n\n` +
+            `Готова к реваншу? `
+        }
+        
+        await bot.sendMessage(chatId, text, {
+          parse_mode: 'Markdown',
+          reply_markup: {
+            inline_keyboard:  [[
+              {
+                text:  '🔄 Играть снова',
+                callback_data:  'new_game'
+              }
+            ]]
+          }
+        })
+        console.log(`✅ ${result} notification sent to ${telegramUsername}`)
+      } catch (err) {
+        console.error('❌ Telegram send error:', err.message)
+      }
+    } else {
+      console. log(`⚠️ Chat ID not found for user ${telegramUserId}`)
+    }
+    
+    // Удаляем использованный токен
+    if (token && redisClient. isOpen) {
+      await redisClient.del(`token:${token}`)
+      console.log(`🔐 Token consumed: ${token}`)
+    }
+    
+    res.json({ success: true })
+  } catch (err) {
+    console.error('❌ Notify result error:', err.message)
+    res.status(500).json({ success: false, error: 'Server error' })
+  }
+})
+
 // Обработчик callback-кнопок
 if (bot) {
   bot.on('callback_query', async (query) => {
@@ -242,13 +340,13 @@ if (bot) {
           await redisClient. setEx(`token:${token}`, TOKEN_TTL_SEC, Date.now().toString())
         }
       } catch (err) {
-        console.error('❌ Token generation error:', err. message)
+        console.error('❌ Token generation error:', err.message)
       }
       
       bot.answerCallbackQuery(query.id, { text: 'Токен создан!' })
       
       bot.sendMessage(chatId, 
-        `🎮 Новая игра!\n\n` +
+        `🎮 *Новая игра!*\n\n` +
         `Твой токен:  \`${token}\`\n\n` +
         `Токен действителен ${Math. round(TOKEN_TTL_SEC / 60)} минут.`,
         {
@@ -282,7 +380,7 @@ app.post('/api/result', async (req, res) => {
       const exists = await redisClient.exists(`token:${providedToken}`)
       if (!exists) {
         console.warn('❌ Invalid token:', providedToken)
-        return res. status(401).json({ error: 'Invalid or missing token' })
+        return res.status(401).json({ error: 'Invalid or missing token' })
       }
 
       await redisClient.del(`token:${providedToken}`)
@@ -310,7 +408,7 @@ app.post('/api/result', async (req, res) => {
       }
     }
 
-    res.json({ ok: true })
+    res. json({ ok: true })
   } catch (err) {
     console.error('❌ /api/result error:', err.message)
     res.status(500).json({ error: 'server error', details: err.message })
@@ -329,12 +427,20 @@ if (API_SECRET) {
       }
 
       const keys = await redisClient.keys('token:*')
+      const userKeys = await redisClient.keys('user:*: chatId')
       const tokens = []
       for (const k of keys) {
         const ttl = await redisClient.ttl(k)
         tokens.push({ token: k. replace('token:', ''), ttl })
       }
-      res.json({ tokens, count: tokens.length, users: Array.from(userChatIds. keys()) })
+      
+      const users = []
+      for (const k of userKeys) {
+        const chatId = await redisClient.get(k)
+        users.push({ key: k, chatId })
+      }
+      
+      res.json({ tokens, count: tokens.length, users })
     } catch (err) {
       res.status(500).json({ error: err.message })
     }
@@ -344,7 +450,7 @@ if (API_SECRET) {
 // SPA fallback
 if (fs.existsSync(clientDist)) {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(clientDist, 'index. html'))
+    res.sendFile(path.join(clientDist, 'index.html'))
   })
 }
 
