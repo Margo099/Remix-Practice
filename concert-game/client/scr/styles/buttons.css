@@ -1,0 +1,54 @@
+.answer-buttons {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.answer-btn {
+  flex: 1;
+  max-width: 250px;
+  padding: 2rem 1rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.answer-btn:disabled {
+  cursor: not-allowed;
+}
+
+.agree-btn {
+  background: linear-gradient(135deg, #00d2d3, #00f5a0);
+  color: #1a1a2e;
+}
+
+.agree-btn:hover:not(:disabled) {
+  box-shadow: 0 15px 40px rgba(0, 210, 211, 0.5);
+}
+
+.disagree-btn {
+  background: linear-gradient(135deg, #ff006e, #ff4757);
+  color: white;
+}
+
+.disagree-btn:hover:not(:disabled) {
+  box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
+}
+
+.btn-icon {
+  font-size: 2.5rem;
+}
+
+.btn-text {
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+}

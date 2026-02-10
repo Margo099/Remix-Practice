@@ -1,0 +1,60 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "question": "Пицца с ананасами — это преступление против человечества",
+      "correctAnswer": "disagree",
+      "timeLimit": 10,
+      "hint": "Вспомни наши споры про еду 🍕",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "question": "Ты помнишь, где мы встретились в первый раз",
+      "correctAnswer": "agree",
+      "timeLimit": 9,
+      "hint": "Это было незабываемо ❤️",
+      "difficulty": "easy"
+    },
+    {
+      "id": 3,
+      "question": "Блокчейн изменит мир в ближайшие 5 лет",
+      "correctAnswer": "agree",
+      "timeLimit": 8,
+      "hint": "Моя работа связана с этим 😉",
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "question": "Node.js — лучший выбор для бэкенда любого проекта",
+      "correctAnswer": "agree",
+      "timeLimit": 7,
+      "hint": "Я его изучаю не просто так!",
+      "difficulty": "medium"
+    },
+    {
+      "id": 5,
+      "question": "Концерты лучше смотреть дома на диване",
+      "correctAnswer": "disagree",
+      "timeLimit": 7,
+      "hint": "Подумай хорошенько... 🎵",
+      "difficulty": "medium"
+    },
+    {
+      "id": 6,
+      "question": "14 февраля — идеальный день для сюрпризов от любимой девушки",
+      "correctAnswer": "agree",
+      "timeLimit": 6,
+      "hint": "Сегодня же этот день! 💝",
+      "difficulty": "hard"
+    },
+    {
+      "id": 7,
+      "question": "Ты готов получить свой подарок прямо сейчас?",
+      "correctAnswer": "agree",
+      "timeLimit": 5,
+      "hint": "Последний шаг до сюрприза! 🎁",
+      "difficulty": "hard"
+    }
+  ]
+}
