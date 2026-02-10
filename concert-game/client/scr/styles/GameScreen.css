@@ -1,0 +1,83 @@
+.start-screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.start-content {
+  text-align: center;
+  padding: 3rem;
+  max-width: 600px;
+}
+
+.start-title {
+  font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(45deg, #00d2d3, #ff006e, #6c5ce7);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.5rem;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.start-subtitle {
+  font-size: 1.5rem;
+  color: #a8a8a8;
+  margin-bottom: 3rem;
+}
+
+.start-rules {
+  background: rgba(108, 92, 231, 0.1);
+  border: 2px solid #6c5ce7;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.start-rules p {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #6c5ce7;
+}
+
+.start-rules ul {
+  list-style: none;
+  padding: 0;
+}
+
+.start-rules li {
+  font-size: 1.1rem;
+  margin: 0.8rem 0;
+  color: #ffffff;
+  padding-left: 0.5rem;
+}
+
+.start-button {
+  background: linear-gradient(135deg, #6c5ce7, #00d2d3);
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding: 1.2rem 3rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
+  transition: all 0.3s ease;
+}
+
+.start-button:hover {
+  box-shadow: 0 15px 40px rgba(108, 92, 231, 0.6);
+  transform: translateY(-2px);
+}

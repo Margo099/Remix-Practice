@@ -1,0 +1,59 @@
+.question-card {
+  background: rgba(108, 92, 231, 0.1);
+  border: 3px solid #6c5ce7;
+  border-radius: 30px;
+  padding: 3rem;
+  text-align: center;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.level-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #6c5ce7, #00d2d3);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+}
+
+.question-text {
+  font-size: 2rem;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.hint-container {
+  margin-top: 2rem;
+}
+
+.hint-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.hint-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.hint-text {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 210, 211, 0.1);
+  border-left: 4px solid #00d2d3;
+  border-radius: 10px;
+  color: #00d2d3;
+  font-style: italic;
+}
