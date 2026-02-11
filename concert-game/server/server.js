@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import gameRoutes from './routes/game.js';
+import ticketRoutes from './routes/tickets.js';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/game', gameRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
