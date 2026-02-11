@@ -57,28 +57,3 @@
   color: #00d2d3;
   font-style: italic;
 }
-/* Мобильная адаптивность */
-@media (max-width: 768px) {
-  .game-screen {
-    padding: 1rem;
-  }
-
-  .question-container {
-    max-width: 100%;
-  }
-
-  .answer-buttons {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .answer-btn {
-    max-width: 100%;
-  }
-
-  .progress-step {
-    width: 40px;
-    height: 40px;
-    font-size: 0.9rem;
-  }
-}
