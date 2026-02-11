@@ -5,6 +5,7 @@ import QuestionCard from './QuestionCard';
 import AnswerButtons from './AnswerButtons';
 import Timer from './Timer';
 import ProgressBar from './ProgressBar';
+import useSound from '../hooks/useSound';
 import '../styles/GameScreen.css';
 
 const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
@@ -12,14 +13,16 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(10);
   const [isAnswering, setIsAnswering] = useState(false);
-  const [feedback, setFeedback] = useState(null); // { type: 'success' | 'error', message: '' }
+  const [feedback, setFeedback] = useState(null);
+  const [shake, setShake] = useState(false);
 
-  // Загрузка вопроса для текущего уровня
+  const { playTick, playCorrect, playWrong, playVictory } = useSound();
+
   useEffect(() => {
     loadLevel(currentLevel);
   }, [currentLevel]);
 
-  // Таймер
+  // Таймер с звуком
   useEffect(() => {
     if (!question || isAnswering || timeLeft === 0) return;
 
@@ -28,6 +31,10 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
         if (prev <= 1) {
           handleTimeout();
           return 0;
+        }
+        // Звук тиканья на последних 3 секундах
+        if (prev <= 4) {
+          playTick();
         }
         return prev - 1;
       });
@@ -43,6 +50,7 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
       setQuestion(response.data);
       setTimeLeft(response.data.timeLimit);
       setFeedback(null);
+      setShake(false);
       setLoading(false);
     } catch (error) {
       console.error('Error loading level:', error);
@@ -62,27 +70,28 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
       });
 
       if (response.data.correct) {
-        // Правильный ответ
+        playCorrect();
         setFeedback({ type: 'success', message: '✅ Правильно!' });
 
         setTimeout(() => {
           if (response.data.isLastLevel) {
-            // Последний уровень - переход на финальный экран
+            playVictory();
             onComplete();
           } else {
-            // Переход на следующий уровень
             setCurrentLevel(currentLevel + 1);
             setIsAnswering(false);
           }
         }, 1500);
       } else {
-        // Неправильный ответ - Game Over
-        setFeedback({ type: 'error', message: '❌ Неправильно! Попробуй снова' });
+        playWrong();
+        setShake(true);
+        setFeedback({ type: 'error', message: '❌ Неправильно! Начинаем сначала...' });
         
         setTimeout(() => {
-          setCurrentLevel(1); // Рестарт с первого уровня
+          setCurrentLevel(1);
           setIsAnswering(false);
-        }, 2000);
+          setShake(false);
+        }, 2500);
       }
     } catch (error) {
       console.error('Error validating answer:', error);
@@ -93,13 +102,16 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
 
   const handleTimeout = () => {
     if (isAnswering) return;
-    setFeedback({ type: 'error', message: '⏰ Время вышло!' });
+    playWrong();
+    setShake(true);
+    setFeedback({ type: 'error', message: '⏰ Время вышло! Начинаем сначала...' });
     setIsAnswering(true);
 
     setTimeout(() => {
-      setCurrentLevel(1); // Рестарт
+      setCurrentLevel(1);
       setIsAnswering(false);
-    }, 2000);
+      setShake(false);
+    }, 2500);
   };
 
   if (loading) {
@@ -127,9 +139,13 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
             <motion.div
               key={currentLevel}
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                x: shake ? [-10, 10, -10, 10, 0] : 0
+              }}
               exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: shake ? 0.5 : 0.3 }}
               className="question-container"
             >
               <QuestionCard 
@@ -148,13 +164,12 @@ const GameScreen = ({ currentLevel, setCurrentLevel, onComplete }) => {
           )}
         </AnimatePresence>
 
-        {/* Feedback сообщения */}
         <AnimatePresence>
           {feedback && (
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
+              initial={{ opacity: 0, y: 50, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -50, scale: 0.8 }}
               className={`feedback feedback-${feedback.type}`}
             >
               {feedback.message}

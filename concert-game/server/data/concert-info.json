@@ -1,0 +1,12 @@
+{
+  "artist": "Название группы/исполнителя",
+  "venue": "Название площадки",
+  "date": "14 февраля 2026",
+  "time": "19:00",
+  "tickets": 2,
+  "section": "Партер",
+  "row": "10",
+  "seats": "15-16",
+  "personalMessage": "С Днём Святого Валентина, любимый! 💝\nИдём вместе наслаждаться музыкой!",
+  "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TICKET_VALENTINE_2026"
+}
